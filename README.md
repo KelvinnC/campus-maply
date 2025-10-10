@@ -13,6 +13,6 @@ In-scope: The project will design and deploy a web-based, interactive map. The m
 Out-of-scope: The project will not integrate with official room or event booking systems. Real-time GPS navigation beyond location services will also be outside of the scope of this project.
 
 # Tech Stack, Database & Libraries
-Tach Stack: React for frontend, Javascript with Node JS for the backend. We will use SQLite for the database. To worl with the map we will use Leaflet, a third party JS library for interactive map. 
+Tech Stack: React for frontend, Javascript with Node JS for the backend. We will use SQLite for the database. To work with the map we will use Leaflet, a third party JS library for interactive map. 
 
-![chart image](/docs/)
+![chart image](/docs/images/L01-IC%20Gantt%20View.png)
