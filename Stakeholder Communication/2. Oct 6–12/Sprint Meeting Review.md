@@ -32,22 +32,20 @@ No change requests were made during this week.
 
 ### Risks and Issues
 
-**High-Priority Risks**
+
 - **Risk:** Delay in backend development  
-  **Impact:** Could push project milestones back  
+  **Likelihood:** Medium
+  **Impact:** High
   **Mitigation:** Ensure group members know their responsibilities; monitor progress daily. Meet and check progress next week.
 
 - **Risk:** Key team members less available due to academic stressors 
-  **Impact:** Critical tasks may stall  
-  **Mitigation:** Assign deliverables to other team members with more open schedule; adjust due dates if necessary.
-
-**Medium-Priority Risks**
-- **Risk:** Integration issues between frontend and API  
-  **Impact:** UI features may not function correctly  
-  **Mitigation:** Schedule early integration testing; maintain regular communication  
+  **Likelihood:** High
+  **Impact:** Medium
+  **Mitigation:** Assign deliverables to other team members with more open schedule; adjust due dates if necessary. 
 
 - **Risk:** Data quality or availability issues regaurding room schedule
-  **Impact:** Could affect room schedule viewer. 
-  **Mitigation:** Validate data is ; have backup dataset, use sample data if data is unavailable.
+  **Likelihood:** High
+  **Impact:** Low
+  **Mitigation:** Use sample data if data is unavailable.
 
 
