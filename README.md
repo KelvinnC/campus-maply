@@ -16,3 +16,5 @@ Out-of-scope: The project will not integrate with official room or event booking
 Tech Stack: React for frontend, Javascript with Node JS for the backend. We will use SQLite for the database. To work with the map we will use Leaflet, a third party JS library for interactive map. 
 
 ![chart image](/docs/images/L01-IC%20Gantt%20View.png)
+
+Link to the Gantt Chart: https://app.smartsheet.com/sheets/hPh9Gmxh5PjWhxJpgXgQCXX32q4234fmH6RMPvr1
