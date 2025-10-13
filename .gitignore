@@ -1,2 +1,6 @@
 .DS_Store
 .Rhistory
+node_modules/
+*.db
+.vscode/
+.git
