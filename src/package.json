@@ -1,0 +1,14 @@
+{
+  "name": "ubco-campus-map",
+  "version": "1.0.0",
+  "description": "UBCO Interactive Campus Map",
+  "scripts": {
+    "postinstall": "cd server && npm install && cd ../client && npm install && cd ../server && rm -f data/campus_map.db",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
