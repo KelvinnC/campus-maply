@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import database from './data/database.js';
 import buildingsRouter from './routes/buildings.js';
+import parkinglotsRouter from './routes/parkinglots.js';
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/buildings', buildingsRouter);
+app.use('/api/parkinglots', parkinglotsRouter);
 
 async function startServer() {
   try {
