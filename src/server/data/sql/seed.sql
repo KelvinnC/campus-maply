@@ -5,9 +5,12 @@ INSERT OR IGNORE INTO users (email, password, status, name) VALUES
 ('faculty@ubco.ca', '$2a$10$sjDGCAnUqe3ebtQ9XsNBXeQeICem530uTdhuSx4fU7eHiqpXPG/pq', 'FACULTY', 'Faculty'), -- password: faculty
 ('visitor@ubco.ca', '$2a$10$Wt7x17/GiNsLAlR/0mY6fO2uRt1drCok0O4rXhks/.KuD738Ky1fi', 'VISITOR', 'Visitor'); -- password: visitor
  
- 
+
  -- Buildings
+
+ -- Notes:
  -- Location data is missing for some buildings, use 0.0 for lat/long for now
+ -- Nechako Residence (NCH) is included though it is not an academic building, it includes businesses and study spaces
 INSERT OR IGNORE INTO buildings (code, name, description, latitude, longitude) VALUES
 ('EME', 'EME Building', 'Engineering labs and classrooms', 49.93897757219247, -119.39452319234998), -- ID 1
 ('SCI', 'Science Building', 'Science labs and classrooms', 49.939937688493835, -119.39653667004586), -- ID 2
@@ -22,7 +25,8 @@ INSERT OR IGNORE INTO buildings (code, name, description, latitude, longitude) V
 ('HSC', 'Health Sciences Centre', NULL, 0.0, 0.0), -- ID 11
 ('UNC', 'University Centre', NULL, 0.0, 0.0), -- ID 12
 ('UCH', 'Upper Campus Health Building', NULL, 0.0, 0.0), -- ID 13
-('RHS', 'Reichwald Health Sciences Centre', NULL, 0.0, 0.0); -- ID 14
+('RHS', 'Reichwald Health Sciences Centre', NULL, 0.0, 0.0), -- ID 14
+('NCH', 'Nechako Residence', NULL, 0.0, 0.0); -- ID 15
 
 
 -- Rooms (formal and informal learning spaces)
@@ -261,17 +265,36 @@ INSERT INTO washrooms (building_id, room_number, latitude, longitude, descriptio
 INSERT OR IGNORE INTO events (title, description, building_id, latitude, longitude, start_time, end_time, created_by) VALUES
 ('Engineering Orientation Day', 'Guided tour of EME Building', 1, 49.939116912933684, -119.39479874074324, '2025-09-22 10:00:00', '2025-09-22 11:00:00', 1);
 
--- Restaurants
-INSERT OR IGNORE INTO restaurants (name, latitude, longitude, description, hours) VALUES
-('Rocket Bistro', 49.93874936594265, -119.39423985264531, 'Coffee, sandwiches, and light meals', '9:00 AM - 3:00 PM, Weekdays'),
-('Sunshine Eatery', 49.93900630460963, -119.39591816879896, 'Coffee, sandwiches, and light meals', 'Temporarily Closed'),
-('Tim Hortons', 49.93989419710717, -119.39578930315645, 'Coffee, sandwiches, and light meals', '7:30 AM - 5:00 PM, Weekdays'),
-('Comma Cafe', 49.94036900534359, -119.39546068495089, 'Coffee, sandwiches, and light meals', '8:00 AM - 7:00 PM, Weekdays'),
-('Starbucks', 49.940697944955296, -119.39686766568593, 'Coffee, sandwiches, and light meals', '7:30 AM - 6:00 PM, Weekdays'),
-('Spoon', 49.93916994252814, -119.39715027789832, 'Soups', '9:00 AM - 2:00 PM, Weekdays'),
-('Fusion Express', 49.94102897920256, -119.39588126942678, 'Asian Fusiuon Cousine', '11:00 AM - 6:00 PM, Weekdays'),
-('Jays Cafe Express', 49.941087234913624, -119.39611062153317, 'Cod, sandwiches, and light meals', '9:00 AM - 10:00 PM, Everyday except Sundays'),
-('Pritchard Dining Hall', 49.941504898628004, -119.39568798734781, 'Breakfast,Lunch,Dinner All You Can Eat Buffet','7:00 AM - 10:00 PM, Everyday');
+-- Businesses
+INSERT OR IGNORE INTO businesses (building_id, name, latitude, longitude, description, hours) VALUES
+-- In Engineering Building (id = 1)
+(1, 'Restaurant', 'Rocket Bistro', 49.93874936594265, -119.39423985264531, 'Coffee, sandwiches, and light meals', '9:00 AM - 3:00 PM, Weekdays'),
+
+-- In Administration Building (id = 4)
+(4, 'Restaurant', 'Sunshine Eatery', 49.93900630460963, -119.39591816879896, 'Coffee, sandwiches, and light meals', 'Temporarily Closed'),
+(4, 'Retail', 'UBCO Bookstore', 49.93927638645953, -119.39573935569453, 'UBC branded clothing and supplies, tech items, gifts, snacks, decor, books and more.', '9:00 AM to 4:30 PM, Monday to Friday'),
+
+-- In Library Building (id = 10)
+(10, 'Restaurant', 'Tim Hortons', 49.93989419710717, -119.39578930315645, 'Coffee, sandwiches, and light meals', '7:30 AM - 5:00 PM, Weekdays'),
+
+-- In Commons Building (id = 7)
+(7, 'Restaurant', 'Comma Cafe', 49.94036900534359, -119.39546068495089, 'Coffee, sandwiches, and light meals', '8:00 AM - 7:00 PM, Weekdays'),
+
+-- In Fipke Centre (id = 8)
+(8, 'Restaurant', 'Starbucks', 49.940697944955296, -119.39686766568593, 'Coffee, sandwiches, and light meals', '7:30 AM - 6:00 PM, Weekdays'),
+
+-- In Arts Building (id = 3)
+(3, 'Restaurant', 'Spoon', 49.93916994252814, -119.39715027789832, 'Soups', '9:00 AM - 2:00 PM, Weekdays'),
+
+-- University Centre (id = 12)
+(12, 'Restaurant', 'Fusion Express', 49.94102897920256, -119.39588126942678, 'Asian Fusion Cuisine', '11:00 AM - 6:00 PM, Weekdays'),
+(12, 'Restaurant', 'Jays Cafe Express', 49.941087234913624, -119.39611062153317, 'Cod, sandwiches, and light meals', '9:00 AM - 10:00 PM, Everyday except Sundays'),
+(12, 'Restaurant', 'Koi Sushi', 49.94142087375924, -119.39618878709128, 'Sushi and Japanese Cuisine', '11:00 AM - 2:00 PM, Weekdays'),
+
+-- Nechako Residence (id = 15)
+(15, 'Restaurant', 'Pritchard Dining Hall', 49.941504898628004, -119.39568798734781, 'Breakfast,Lunch,Dinner All You Can Eat Buffet','7:00 AM - 10:00 PM, Everyday'),
+(15, 'Retail', 'Orchard Convenience Store', 49.94186499909573, -119.39629218660767, 'A selection of ice-cream and treats, grab & go snacks, basic groceries and essentials like stationery, hygiene and health, and household supplies, and of course coffee.', '12:00 PM - 10:00 PM, Monday to Sunday');
+
 
 -- Parking Lots
 INSERT OR IGNORE INTO parking_lots (name, latitude, longitude, description) VALUES

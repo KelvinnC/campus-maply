@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS washrooms (
     longitude REAL,       -- leave blank for now
     description TEXT,
     accessibility TEXT,   -- e.g. W, WAG, WW, WM
-    gender TEXT,          -- e.g. All Gender, Women, Men, etc
+    gender TEXT,          -- e.g. All Gender, Women, Men, etc.
     FOREIGN KEY (building_id) REFERENCES buildings(id)
 );
 
@@ -61,14 +61,17 @@ CREATE TABLE IF NOT EXISTS rooms (
     FOREIGN KEY (building_id) REFERENCES buildings(id)
 );
 
--- Restaurants
-CREATE TABLE IF NOT EXISTS restaurants (
+-- Businesses
+CREATE TABLE IF NOT EXISTS businesses (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    building_id INTEGER NOT NULL, 
+    category TEXT NOT NULL, -- e.g. Restaurant, Retail
     name TEXT NOT NULL,
     latitude REAL NOT NULL,
     longitude REAL NOT NULL,
     description TEXT,
-    hours TEXT
+    hours TEXT,
+    FOREIGN KEY (building_id) REFERENCES buildings(id)
 );
 
 -- Parking lots
