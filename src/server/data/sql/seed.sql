@@ -9,30 +9,28 @@ INSERT OR IGNORE INTO users (email, password, status, name) VALUES
  -- Buildings
 
  -- Notes:
- -- Location data is missing for some buildings, use 0.0 for lat/long for now
  -- Nechako Residence (NCH) is included though it is not an academic building, it includes businesses and study spaces
 INSERT OR IGNORE INTO buildings (code, name, description, latitude, longitude) VALUES
 ('EME', 'EME Building', 'Engineering labs and classrooms', 49.93897757219247, -119.39452319234998), -- ID 1
 ('SCI', 'Science Building', 'Science labs and classrooms', 49.939937688493835, -119.39653667004586), -- ID 2
 ('ART', 'Arts Building', 'Arts Building', 49.9393520199701, -119.39705448468789), -- ID 3
-('ADM', 'Administration Building', NULL, 0.0, 0.0), -- ID 4
-('ASC', 'Arts and Sciences Centre', NULL, 0.0, 0.0), -- ID 5
-('CCS', 'Creative and Critical Studies Building', NULL, 0.0, 0.0), -- ID 6
-('COM', 'The Commons', NULL, 0.0, 0.0), -- ID 7
-('FIP', 'Fipke Centre for Innovative Research', NULL, 0.0, 0.0), -- ID 8
-('GYM', 'Gymnasium', NULL, 0.0, 0.0), -- ID 9
-('LIB', 'Library', NULL, 0.0, 0.0), -- ID 10
-('HSC', 'Health Sciences Centre', NULL, 0.0, 0.0), -- ID 11
-('UNC', 'University Centre', NULL, 0.0, 0.0), -- ID 12
-('UCH', 'Upper Campus Health Building', NULL, 0.0, 0.0), -- ID 13
-('RHS', 'Reichwald Health Sciences Centre', NULL, 0.0, 0.0), -- ID 14
-('NCH', 'Nechako Residence', NULL, 0.0, 0.0); -- ID 15
+('ADM', 'Administration Building', NULL, 49.93933659211864, -119.39579576725608), -- ID 4
+('ASC', 'Arts and Sciences Centre', NULL, 49.940229713958146, -119.39793510209506), -- ID 5
+('CCS', 'Creative and Critical Studies Building', NULL, 49.93932456175566, -119.39853239394478), -- ID 6
+('COM', 'The Commons', NULL, 49.94057574610428, -119.39519170659227), -- ID 7
+('FIP', 'Fipke Centre for Innovative Research', NULL, 49.94076560231333, -119.39686802053512), -- ID 8
+('GYM', 'Gymnasium', NULL, 49.93809650787732, -119.39787961282947), -- ID 9
+('LIB', 'Library', NULL, 49.940043166688596, -119.39554523378702), -- ID 10
+('RHS', 'Reichwald Health Sciences Centre', NULL, 49.93846149354549, -119.39964324460803), -- ID 11
+('UNC', 'University Centre', NULL, 49.94161840170917, -119.39622428143943), -- ID 12
+('UCH', 'Upper Campus Health Building', NULL, 49.94149610063595, -119.40017123006567), -- ID 13
+('NCH', 'Nechako Residence', NULL, 49.941813296698406, -119.39616404421658); -- ID 14
 
 
 -- Rooms (formal and informal learning spaces)
 INSERT INTO rooms (building_id, room_number, capacity, furniture, layout, room_type, notes) VALUES
 -- Admin Building (id = 4)
-(4, '026', 200, 'Fixed Tablets', 'Tiered Classroom', 'Formal Learning', NULL),
+(4, '026', 200, 'Fixed Tablets', 'Tiered Classroom', 'Formal Learning', 'University Theater'),
 (4, '100', 15, 'Mixed', NULL, 'Informal Learning', NULL),
 (4, '121', 320, 'Fixed Tables', NULL, 'Informal Learning', NULL),
 
@@ -266,7 +264,7 @@ INSERT OR IGNORE INTO events (title, description, building_id, latitude, longitu
 ('Engineering Orientation Day', 'Guided tour of EME Building', 1, 49.939116912933684, -119.39479874074324, '2025-09-22 10:00:00', '2025-09-22 11:00:00', 1);
 
 -- Businesses
-INSERT OR IGNORE INTO businesses (building_id, name, latitude, longitude, description, hours) VALUES
+INSERT OR IGNORE INTO businesses (building_id, category, name, latitude, longitude, description, hours) VALUES
 -- In Engineering Building (id = 1)
 (1, 'Restaurant', 'Rocket Bistro', 49.93874936594265, -119.39423985264531, 'Coffee, sandwiches, and light meals', '9:00 AM - 3:00 PM, Weekdays'),
 
@@ -291,9 +289,9 @@ INSERT OR IGNORE INTO businesses (building_id, name, latitude, longitude, descri
 (12, 'Restaurant', 'Jays Cafe Express', 49.941087234913624, -119.39611062153317, 'Cod, sandwiches, and light meals', '9:00 AM - 10:00 PM, Everyday except Sundays'),
 (12, 'Restaurant', 'Koi Sushi', 49.94142087375924, -119.39618878709128, 'Sushi and Japanese Cuisine', '11:00 AM - 2:00 PM, Weekdays'),
 
--- Nechako Residence (id = 15)
-(15, 'Restaurant', 'Pritchard Dining Hall', 49.941504898628004, -119.39568798734781, 'Breakfast,Lunch,Dinner All You Can Eat Buffet','7:00 AM - 10:00 PM, Everyday'),
-(15, 'Retail', 'Orchard Convenience Store', 49.94186499909573, -119.39629218660767, 'A selection of ice-cream and treats, grab & go snacks, basic groceries and essentials like stationery, hygiene and health, and household supplies, and of course coffee.', '12:00 PM - 10:00 PM, Monday to Sunday');
+-- Nechako Residence (id = 14)
+(14, 'Restaurant', 'Pritchard Dining Hall', 49.941504898628004, -119.39568798734781, 'Breakfast,Lunch,Dinner All You Can Eat Buffet','7:00 AM - 10:00 PM, Everyday'),
+(14, 'Retail', 'Orchard Convenience Store', 49.94186499909573, -119.39629218660767, 'A selection of ice-cream and treats, grab & go snacks, basic groceries and essentials like stationery, hygiene and health, and household supplies, and of course coffee.', '12:00 PM - 10:00 PM, Monday to Sunday');
 
 
 -- Parking Lots
