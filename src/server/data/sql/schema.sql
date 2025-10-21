@@ -12,13 +12,14 @@ CREATE TABLE IF NOT EXISTS users (
 -- Buildings
 CREATE TABLE IF NOT EXISTS buildings (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    code TEXT UNIQUE NOT NULL,
     name TEXT NOT NULL,
+    description TEXT,
     latitude REAL NOT NULL,
-    longitude REAL NOT NULL,
-    description TEXT
+    longitude REAL NOT NULL
 );
 
--- EventsI
+-- Events
 CREATE TABLE IF NOT EXISTS events (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
@@ -36,11 +37,28 @@ CREATE TABLE IF NOT EXISTS events (
 -- Washrooms
 CREATE TABLE IF NOT EXISTS washrooms (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    latitude REAL NOT NULL,
-    longitude REAL NOT NULL,
+    building_id INTEGER NOT NULL,
+    room_number TEXT,
+    latitude REAL,        -- leave blank for now
+    longitude REAL,       -- leave blank for now
     description TEXT,
-    accessibility TEXTI
+    accessibility TEXT,   -- e.g. W, WAG, WW, WM
+    gender TEXT,          -- e.g. All Gender, Women, Men, etc
+    FOREIGN KEY (building_id) REFERENCES buildings(id)
+);
+
+
+-- Rooms
+CREATE TABLE IF NOT EXISTS rooms (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    building_id INTEGER,
+    room_number TEXT NOT NULL,
+    capacity INTEGER NOT NULL,
+    furniture TEXT,
+    layout TEXT,
+    room_type TEXT,
+    notes TEXT,
+    FOREIGN KEY (building_id) REFERENCES buildings(id)
 );
 
 -- Restaurants
