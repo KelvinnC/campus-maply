@@ -11,7 +11,7 @@ INSERT OR IGNORE INTO users (email, password, status, name) VALUES
  -- Notes:
  -- Nechako Residence (NCH) is included though it is not an academic building, it includes businesses and study spaces
 INSERT OR IGNORE INTO buildings (code, name, description, latitude, longitude) VALUES
-('EME', 'EME Building', 'Engineering labs and classrooms', 49.93897757219247, -119.39452319234998), -- ID 1
+('EME', 'Engineering Building', 'Engineering labs and classrooms', 49.93897757219247, -119.39452319234998), -- ID 1
 ('SCI', 'Science Building', 'Science labs and classrooms', 49.939937688493835, -119.39653667004586), -- ID 2
 ('ART', 'Arts Building', 'Arts Building', 49.9393520199701, -119.39705448468789), -- ID 3
 ('ADM', 'Administration Building', NULL, 49.93933659211864, -119.39579576725608), -- ID 4
