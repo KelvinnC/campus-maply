@@ -28,7 +28,7 @@ INSERT OR IGNORE INTO buildings (code, name, description, latitude, longitude) V
 
 
 -- Rooms (formal and informal learning spaces)
-INSERT INTO rooms (building_id, room_number, capacity, furniture, layout, room_type, notes) VALUES
+INSERT OR IGNORE INTO rooms (building_id, room_number, capacity, furniture, layout, room_type, notes) VALUES
 -- Admin Building (id = 4)
 (4, '026', 200, 'Fixed Tablets', 'Tiered Classroom', 'Formal Learning', 'University Theater'),
 (4, '100', 15, 'Mixed', NULL, 'Informal Learning', NULL),
@@ -319,4 +319,5 @@ INSERT OR IGNORE INTO bus_stops (name, latitude, longitude, description) VALUES
 ('UBCO Exchange Bay E', 49.94006785602514, -119.39426809409922, 'Bus Stop for Bus #13 and #90'),
 ('Bus Stop Just Outside campus', 49.93894595328127, -119.40201873573912, 'Bus Stop for Bus #6'),
 ('Bus Stop Just Outside campus', 49.937977915432256, -119.40121441156072, 'Bus Stop for Bus #6');
+
 

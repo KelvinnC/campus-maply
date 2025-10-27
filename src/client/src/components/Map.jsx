@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import SearchBox from './SearchBox.jsx';
 
 // marker icons to be changed
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -22,6 +23,8 @@ const Map = () => {
   const [buildings, setBuildings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const mapRef = useRef(null);
+  const markerRefs = useRef({});
 
   // UBCO coordinates
   const ubcoCenter = [49.940228741743574, -119.39708442485471];
@@ -31,7 +34,7 @@ const Map = () => {
   useEffect(() => {
     const fetchBuildings = async () => {
       try {
-        const response = await fetch('http://localhost:4000/api/buildings');
+        const response = await fetch('/api/buildings');
         if (!response.ok) {
           throw new Error('Failed to fetch buildings');
         }
@@ -47,12 +50,29 @@ const Map = () => {
     fetchBuildings();
   }, []);
 
+  const handleSelect = (item) => {
+    // Pan to and open popup if available
+    const latlng = [item.latitude, item.longitude];
+    if (mapRef.current && latlng[0] && latlng[1]) {
+      mapRef.current.setView(latlng, 18, { animate: true });
+    }
+    const buildingId = item.type === 'building' ? item.id : item.building_id;
+    const marker = markerRefs.current[buildingId];
+    if (marker && marker.openPopup) {
+      marker.openPopup();
+    }
+  };
+
   return (
     <div className="map-container">
+      <div className="map-overlay">
+        <SearchBox onSelect={handleSelect} />
+      </div>
       <MapContainer 
         center={ubcoCenter} 
         zoom={zoomLevel} 
         style={{ height: '100%', width: '100%' }}
+        whenCreated={(map) => { mapRef.current = map; }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.esri.com/">Esri</a>'
@@ -64,6 +84,7 @@ const Map = () => {
           <Marker 
             key={building.id} 
             position={[building.latitude, building.longitude]}
+            ref={(ref) => { if (ref) markerRefs.current[building.id] = ref; }}
           >
             <Popup>
               <div className="popup-content">
