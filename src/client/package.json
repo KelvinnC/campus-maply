@@ -9,10 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "leaflet": "^1.9.4",
     "react": "^18.2.0",
+    "react-cookie": "^8.0.1",
     "react-dom": "^18.2.0",
-    "react-leaflet": "^4.2.1",
-    "leaflet": "^1.9.4"
+    "react-hook-form": "^7.65.0",
+    "react-leaflet": "^4.2.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",
@@ -21,4 +23,3 @@
     "vite": "^5.0.8"
   }
 }
-
