@@ -54,10 +54,39 @@ router.get('/available', async (req, res) => {
       res.json(rows || []);
     });
   } catch (error) {
-    console.error('Error in rooms available route:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('Error in rooms available route:', error)}});
+
+
+// get all rooms, or rooms for a specific building via query param ?buildingId=
+router.get('/', async (req, res) => {
+  try {
+    const db = database.getDB();
+    const { buildingId } = req.query;
+
+    if (buildingId) {
+      db.all('SELECT * FROM rooms WHERE building_id = ?', [buildingId], (err, rows) => {
+        if (err) {
+          console.error('Error fetching rooms for building:', err);
+          res.status(500).json({ error: 'Failed to fetch rooms for building' });
+        } else {
+          res.json(rows);
+        }
+      });
+    } else {
+      db.all('SELECT * FROM rooms', [], (err, rows) => {
+        if (err) {
+          console.error('Error fetching rooms:', err);
+          res.status(500).json({ error: 'Failed to fetch rooms' });
+        } else {
+          res.json(rows);
+        }
+      });
+    }
+  } catch (error) {
+    console.error('Error in rooms route:', error);
+    res.status(500).json({ error: 'Internal server error' })};
   }
-});
+);
 
 // Check room availability in a range
 // GET /api/rooms/:roomId/availability?start=ISO&end=ISO
@@ -94,7 +123,25 @@ router.get('/:roomId/availability', async (req, res) => {
       }
     );
   } catch (error) {
-    console.error('Error in room availability route:', error);
+    console.error('Error in room availability route:', error)}});
+// get a single room by id
+router.get('/:id', async (req, res) => {
+  try {
+    const db = database.getDB();
+    const { id } = req.params;
+
+    db.get('SELECT * FROM rooms WHERE id = ?', [id], (err, row) => {
+      if (err) {
+        console.error('Error fetching room:', err);
+        res.status(500).json({ error: 'Failed to fetch room' });
+      } else if (!row) {
+        res.status(404).json({ error: 'Room not found' });
+      } else {
+        res.json(row);
+      }
+    });
+  } catch (error) {
+    console.error('Error in room route:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
