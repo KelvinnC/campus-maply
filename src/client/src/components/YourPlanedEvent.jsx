@@ -5,7 +5,7 @@ export default function YourPlanedEvent(){
 
     return(
         <div className="planedEventsBox">
-            <h1>Your PlanedEvent</h1>
+            <h1>Your Planed Events</h1>
             <EventBox
             event = {event}
             />

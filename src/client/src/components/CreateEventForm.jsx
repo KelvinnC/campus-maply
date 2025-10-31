@@ -11,8 +11,9 @@ export default function createEventForm(){
 
     return(
         <form onSubmit = {handleSubmit(onSubmit)} className="createEventForm" >
+            <h1>Create A New Event</h1>
             <label>Title</label>     
-            <input type="text" name="Title" placeholder="Title" {...register("title")}/>
+            <input type="text" name="Title" {...register("title")}/>
 
             <label>Date</label>
             <input type="date" name="date" {...register("date")}/>
@@ -23,13 +24,13 @@ export default function createEventForm(){
             <label>Location</label>
             {/**I will change this select to a react select that pulls API data for what locations this account can access :) when we get that api working this is just a mock up for now*/}
             <select {...register("location")}>
-                <option value={"EME 1011"}/>
-                <option value={"EME 1012"}/>
-                <option value={"EME 1013"}/>
+                <option value={"EME 1011"}> EME 1011 </option>
+                <option value={"EME 1012"}>EME 1012 </option>
+                <option value={"EME 1013"}>EME 1013 </option>
             </select>
 
             <label>Max Event Size</label>
-            <input type="text" placeholder='Max event size' {...register("maxSize")}/>
+            <input type="text" {...register("maxSize")}/>
 
                     
             <button type="submit" >Create Event</button>
