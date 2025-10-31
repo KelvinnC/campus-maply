@@ -26,7 +26,9 @@ const Map = ({buildingFilter, parkingFilter}) => {
   const [error, setError] = useState(null);
   const [selectedBuilding, setSelectedBuilding] = useState(null);
   const [rooms, setRooms] = useState([]);
-  const [loadingRooms, setLoadingRooms] = useState(false);
+  const [washrooms, setWashrooms] = useState([]);
+  const [businesses, setBusinesses] = useState([]);
+  const [loadingData, setLoadingData] = useState(false);
   const mapRef = useRef(null);
   const markerRefs = useRef({});
 
@@ -54,31 +56,56 @@ const Map = ({buildingFilter, parkingFilter}) => {
     fetchBuildings();
   }, []);
 
-  const fetchRooms = async (buildingId) => {
-    setLoadingRooms(true);
+  const fetchBuildingData = async (buildingId) => {
+    setLoadingData(true);
     try {
-      const response = await fetch(`/api/rooms?buildingId=${buildingId}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch rooms');
+      // Fetch rooms, washrooms, and businesses in parallel
+      const [roomsRes, washroomsRes, businessesRes] = await Promise.all([
+        fetch(`/api/rooms?buildingId=${buildingId}`),
+        fetch(`/api/washrooms?buildingId=${buildingId}`),
+        fetch(`/api/businesses?buildingId=${buildingId}`)
+      ]);
+
+      if (roomsRes.ok) {
+        const roomsData = await roomsRes.json();
+        setRooms(roomsData);
+      } else {
+        setRooms([]);
       }
-      const data = await response.json();
-      setRooms(data);
+
+      if (washroomsRes.ok) {
+        const washroomsData = await washroomsRes.json();
+        setWashrooms(washroomsData);
+      } else {
+        setWashrooms([]);
+      }
+
+      if (businessesRes.ok) {
+        const businessesData = await businessesRes.json();
+        setBusinesses(businessesData);
+      } else {
+        setBusinesses([]);
+      }
     } catch (err) {
-      console.error('Error fetching rooms:', err);
+      console.error('Error fetching building data:', err);
       setRooms([]);
+      setWashrooms([]);
+      setBusinesses([]);
     } finally {
-      setLoadingRooms(false);
+      setLoadingData(false);
     }
   };
 
   const handleBuildingClick = (building) => {
     setSelectedBuilding(building);
-    fetchRooms(building.id);
+    fetchBuildingData(building.id);
   };
 
   const handleCloseRoomList = () => {
     setSelectedBuilding(null);
     setRooms([]);
+    setWashrooms([]);
+    setBusinesses([]);
   };
 
   const handleSelect = (item) => {
@@ -131,7 +158,9 @@ const Map = ({buildingFilter, parkingFilter}) => {
       {selectedBuilding && rooms.length > 0 &&(
         <RoomList 
           building={selectedBuilding} 
-          rooms={rooms} 
+          rooms={rooms}
+          washrooms={washrooms}
+          businesses={businesses}
           onClose={handleCloseRoomList} 
         />
       )}

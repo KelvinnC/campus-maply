@@ -1,9 +1,10 @@
 import React from 'react';
 import '../css/roomList.css';
 
+
 const RoomList = ({ building, rooms= [], washrooms = [], businesses = [], onClose }) => {
   console.log(building, rooms, washrooms, businesses)
-  if (!building) return null;
+
 
   const hasData = rooms.length > 0 || washrooms.length > 0 || businesses.length > 0;
 
