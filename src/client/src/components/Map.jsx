@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import SearchBox from './SearchBox.jsx';
+import RoomList from './RoomList.jsx';
 
 // marker icons to be changed
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -23,6 +24,9 @@ const Map = ({buildingFilter, parkingFilter}) => {
   const [buildings, setBuildings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedBuilding, setSelectedBuilding] = useState(null);
+  const [rooms, setRooms] = useState([]);
+  const [loadingRooms, setLoadingRooms] = useState(false);
   const mapRef = useRef(null);
   const markerRefs = useRef({});
 
@@ -49,6 +53,33 @@ const Map = ({buildingFilter, parkingFilter}) => {
     };
     fetchBuildings();
   }, []);
+
+  const fetchRooms = async (buildingId) => {
+    setLoadingRooms(true);
+    try {
+      const response = await fetch(`/api/rooms?buildingId=${buildingId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch rooms');
+      }
+      const data = await response.json();
+      setRooms(data);
+    } catch (err) {
+      console.error('Error fetching rooms:', err);
+      setRooms([]);
+    } finally {
+      setLoadingRooms(false);
+    }
+  };
+
+  const handleBuildingClick = (building) => {
+    setSelectedBuilding(building);
+    fetchRooms(building.id);
+  };
+
+  const handleCloseRoomList = () => {
+    setSelectedBuilding(null);
+    setRooms([]);
+  };
 
   const handleSelect = (item) => {
     // Pan to and open popup if available
@@ -84,6 +115,9 @@ const Map = ({buildingFilter, parkingFilter}) => {
             key={building.id} 
             position={[building.latitude, building.longitude]}
             ref={(ref) => { if (ref) markerRefs.current[building.id] = ref; }}
+            eventHandlers={{
+              click: () => handleBuildingClick(building)
+            }}
           >
             <Popup>
               <div className="popup-content">
@@ -94,6 +128,13 @@ const Map = ({buildingFilter, parkingFilter}) => {
           </Marker>
         )))}
       </MapContainer>
+      {selectedBuilding && (
+        <RoomList 
+          building={selectedBuilding} 
+          rooms={rooms} 
+          onClose={handleCloseRoomList} 
+        />
+      )}
     </div>
   );
 };
