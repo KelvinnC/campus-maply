@@ -15,7 +15,7 @@ INSERT OR IGNORE INTO buildings (code, name, description, latitude, longitude) V
 ('SCI', 'Science Building', 'Science labs and classrooms', 49.939937688493835, -119.39653667004586), -- ID 2
 ('ART', 'Arts Building', 'Arts Building', 49.9393520199701, -119.39705448468789), -- ID 3
 ('ADM', 'Administration Building', NULL, 49.93933659211864, -119.39579576725608), -- ID 4
-('ASC', 'Arts and Sciences Centre', NULL, 49.940229713958146, -119.39793510209506), -- ID 5
+('ASC', 'Arts and Sciences Centre', NULL, 49.94002725634241, -119.397954863283), -- ID 5
 ('CCS', 'Creative and Critical Studies Building', NULL, 49.93932456175566, -119.39853239394478), -- ID 6
 ('COM', 'The Commons', NULL, 49.94037641376071, -119.39533701970424), -- ID 7
 ('FIP', 'Fipke Centre for Innovative Research', NULL, 49.940629567014575, -119.39638276704424), -- ID 8
@@ -23,7 +23,7 @@ INSERT OR IGNORE INTO buildings (code, name, description, latitude, longitude) V
 ('LIB', 'Library', NULL, 49.940043166688596, -119.39554523378702), -- ID 10
 ('RHS', 'Reichwald Health Sciences Centre', NULL, 49.93804214410787, -119.39956631561031), -- ID 11
 ('UNC', 'University Centre', NULL, 49.94123393487755, -119.39625425533593), -- ID 12
-('UCH', 'Upper Campus Health Building', NULL, 49.94149610063595, -119.40017123006567), -- ID 13
+('UCH', 'Upper Campus Health Building', NULL, 49.94128946542811, -119.40018873218449), -- ID 13
 ('NCH', 'Nechako Residence', NULL, 49.94158431179825, -119.39602512080366); -- ID 14
 
 
