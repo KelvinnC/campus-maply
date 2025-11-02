@@ -79,7 +79,7 @@ const Map = ({buildingFilter, parkingFilter}) => {
           maxZoom={19}
         />
         
-        {!buildingFilter && (buildings.map((building) => (
+        {buildingFilter && (buildings.map((building) => (
           <Marker 
             key={building.id} 
             position={[building.latitude, building.longitude]}
