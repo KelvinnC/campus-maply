@@ -18,15 +18,15 @@
 }
 
 .siteName img {
-    height: 350px;
-    width: 350px;
+    height: 40vh;
+    width: 40vh;
     object-fit: contain;
     place-self: center;
 
 }
 .siteName h1{
     width: 100%;
-    font-size: 64px;
+    font-size: 7vh;
     text-align: center;
 }
 
