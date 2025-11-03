@@ -34,6 +34,21 @@ CREATE TABLE IF NOT EXISTS events (
     FOREIGN KEY (created_by) REFERENCES users(id)
 );
 
+-- Room bookings (room availability / reservations)
+CREATE TABLE IF NOT EXISTS room_bookings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    room_id INTEGER NOT NULL,
+    event_id INTEGER,
+    start_time DATETIME NOT NULL,
+    end_time DATETIME NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (room_id) REFERENCES rooms(id),
+    FOREIGN KEY (event_id) REFERENCES events(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_room_bookings_room_time
+ON room_bookings(room_id, start_time, end_time);
+
 -- Washrooms
 CREATE TABLE IF NOT EXISTS washrooms (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

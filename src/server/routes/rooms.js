@@ -1,0 +1,102 @@
+import express from 'express';
+import database from '../data/database.js';
+
+const router = express.Router();
+
+// available rooms for a time range
+// GET /api/rooms/available?start=ISO&end=ISO[&building_id=][&min_capacity=]
+router.get('/available', async (req, res) => {
+  try {
+    const db = database.getDB();
+    const startParam = req.query.start;
+    const endParam = req.query.end;
+    const buildingId = req.query.building_id || null;
+    const minCapacity = req.query.min_capacity ? parseInt(req.query.min_capacity, 10) : null;
+
+    if (!startParam || !endParam) {
+      return res.status(400).json({ error: 'start and end are required query params (ISO 8601)' });
+    }
+    const start = new Date(startParam);
+    const end = new Date(endParam);
+    if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || end <= start) {
+      return res.status(400).json({ error: 'Invalid time range' });
+    }
+
+    const conditions = [];
+    const params = [];
+    if (buildingId) {
+      conditions.push('r.building_id = ?');
+      params.push(buildingId);
+    }
+    if (Number.isFinite(minCapacity)) {
+      conditions.push('r.capacity >= ?');
+      params.push(minCapacity);
+    }
+
+    const whereRooms = `WHERE 1=1${conditions.length ? ' AND ' + conditions.join(' AND ') : ''}`;
+
+    const sql = `
+      SELECT r.*
+      FROM rooms r
+      ${whereRooms}
+      AND NOT EXISTS (
+        SELECT 1
+        FROM room_bookings rb
+        WHERE rb.room_id = r.id
+          AND NOT (rb.end_time <= ? OR rb.start_time >= ?)
+      )`;
+
+    db.all(sql, [...params, start.toISOString(), end.toISOString()], (err, rows) => {
+      if (err) {
+        console.error('Error searching available rooms:', err);
+        return res.status(500).json({ error: 'Failed to search available rooms' });
+      }
+      res.json(rows || []);
+    });
+  } catch (error) {
+    console.error('Error in rooms available route:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Check room availability in a range
+// GET /api/rooms/:roomId/availability?start=ISO&end=ISO
+router.get('/:roomId/availability', async (req, res) => {
+  try {
+    const db = database.getDB();
+    const { roomId } = req.params;
+    const { start: startParam, end: endParam } = req.query;
+    if (!startParam || !endParam) {
+      return res.status(400).json({ error: 'start and end are required query params (ISO 8601)' });
+    }
+    const start = new Date(startParam);
+    const end = new Date(endParam);
+    if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || end <= start) {
+      return res.status(400).json({ error: 'Invalid time range' });
+    }
+
+    db.all(
+      `SELECT rb.*, e.title AS event_title
+       FROM room_bookings rb
+       LEFT JOIN events e ON rb.event_id = e.id
+       WHERE rb.room_id = ?
+         AND NOT (rb.end_time <= ? OR rb.start_time >= ?)
+       ORDER BY rb.start_time ASC`,
+      [roomId, start.toISOString(), end.toISOString()],
+      (err, rows) => {
+        if (err) {
+          console.error('Error checking room availability:', err);
+          return res.status(500).json({ error: 'Failed to check room availability' });
+        }
+        const conflicts = rows || [];
+        const available = conflicts.length === 0;
+        res.json({ room_id: Number(roomId), available, conflicts });
+      }
+    );
+  } catch (error) {
+    console.error('Error in room availability route:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+export default router;

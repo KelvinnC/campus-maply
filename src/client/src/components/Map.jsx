@@ -19,7 +19,7 @@ let DefaultIcon = L.icon({
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
-const Map = () => {
+const Map = ({buildingFilter, parkingFilter}) => {
   const [buildings, setBuildings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -62,7 +62,6 @@ const Map = () => {
       marker.openPopup();
     }
   };
-
   return (
     <div className="map-container">
       <div className="map-overlay">
@@ -80,7 +79,7 @@ const Map = () => {
           maxZoom={19}
         />
         
-        {buildings.map((building) => (
+        {buildingFilter && (buildings.map((building) => (
           <Marker 
             key={building.id} 
             position={[building.latitude, building.longitude]}
@@ -93,7 +92,7 @@ const Map = () => {
               </div>
             </Popup>
           </Marker>
-        ))}
+        )))}
       </MapContainer>
     </div>
   );
