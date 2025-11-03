@@ -5,6 +5,8 @@ import database from './data/database.js';
 import buildingsRouter from './routes/buildings.js';
 import parkinglotsRouter from './routes/parkinglots.js';
 import searchRouter from './routes/search.js';
+import eventsRouter from './routes/events.js';
+import roomsRouter from './routes/rooms.js';
 
 dotenv.config();
 
@@ -17,6 +19,8 @@ app.use(express.json());
 app.use('/api/buildings', buildingsRouter);
 app.use('/api/parkinglots', parkinglotsRouter);
 app.use('/api/search', searchRouter);
+app.use('/api/events', eventsRouter);
+app.use('/api/rooms', roomsRouter);
 
 async function startServer() {
   try {
