@@ -13,11 +13,11 @@ export default function Filters({buildingFilter, parkingFilter}){
             <h1>Filters</h1>
             <div className="filter">
                 <input type="checkbox" name="" id="" defaultChecked onChange={sendBuildingFilterToParent}/>
-                <label>Parking</label>
+                <label>Buildings</label>
             </div>
             <div className="filter">
                 <input type="checkbox" name="" id="" defaultChecked onChange={sendParkingFilterToParent}/>
-                <label htmlFor="">Buildings</label>
+                <label htmlFor="">Parking</label>
             </div>
         </div>
     )

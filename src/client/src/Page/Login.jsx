@@ -1,4 +1,4 @@
-import LoginForm from "../Components/LoginForm"
+import LoginForm from "../components/loginForm"
 import NavBar from "../components/NavBar"
 import mapIcon from "../assets/mapIcon.png"
 import "../css/login.css"

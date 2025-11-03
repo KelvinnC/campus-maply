@@ -1,6 +1,6 @@
 import { useState } from "react"
 import Filters from "../components/Filters"
-import Map from "../Components/Map"
+import Map from "../components/Map"
 import NavBar from "../components/NavBar"
 import "../css/mainMap.css"
 export default function MainMap(){
