@@ -34,34 +34,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// get a single room by id
-router.get('/:id', async (req, res) => {
-  try {
-    const db = database.getDB();
-    const { id } = req.params;
-
-    db.get('SELECT * FROM rooms WHERE id = ?', [id], (err, row) => {
-      if (err) {
-        console.error('Error fetching room:', err);
-        res.status(500).json({ error: 'Failed to fetch room' });
-      } else if (!row) {
-        res.status(404).json({ error: 'Room not found' });
-      } else {
-        res.json(row);
-      }
-    });
-  } catch (error) {
-    console.error('Error in room route:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-export default router;
-import express from 'express';
-import database from '../data/database.js';
-
-const router = express.Router();
-
 // available rooms for a time range
 // GET /api/rooms/available?start=ISO&end=ISO[&building_id=][&min_capacity=]
 router.get('/available', async (req, res) => {
@@ -154,6 +126,28 @@ router.get('/:roomId/availability', async (req, res) => {
     );
   } catch (error) {
     console.error('Error in room availability route:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// get a single room by id (keep this after the more specific routes)
+router.get('/:id', async (req, res) => {
+  try {
+    const db = database.getDB();
+    const { id } = req.params;
+
+    db.get('SELECT * FROM rooms WHERE id = ?', [id], (err, row) => {
+      if (err) {
+        console.error('Error fetching room:', err);
+        res.status(500).json({ error: 'Failed to fetch room' });
+      } else if (!row) {
+        res.status(404).json({ error: 'Room not found' });
+      } else {
+        res.json(row);
+      }
+    });
+  } catch (error) {
+    console.error('Error in room route:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
