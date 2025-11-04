@@ -110,11 +110,18 @@
 }
 
 .login-message {
-    padding: 10px 20px;
+    width: 27vw;
+    max-width: 420px;
+    max-height: fit-content;
+    box-sizing: border-box;
+    padding: 8px 12px;
     border-radius: 5px;
     margin-bottom: 10px;
     text-align: center;
     font-size: 0.95em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .login-message.success {
