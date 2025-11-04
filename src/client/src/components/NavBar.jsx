@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useNavigate  } from "react-router-dom"
 import "../css/navBar.css"
 
 export default function NavBar(){
@@ -6,9 +6,10 @@ export default function NavBar(){
     const location = useLocation()
     const isLoginPage = location.pathname === '/login'
     const isEventMangerPage = location.pathname === '/event-planner'
+    const navigate = useNavigate();
     function signOut(){
         localStorage.clear()
-        window.location.reload();
+        navigate("/");
     }
     
     return(
