@@ -19,10 +19,7 @@ export default function NavBar(){
                 </Link>
             </div>
             <div className="navBarFlexBox">
-                {/**This is where we would have our auth for this button ie
-                 *  loggedIn === "Prof" if Prof is the role we want 
-                 */}
-                {loggedIn && loggedIn.status === "Prof" && !isEventMangerPage&&(
+                {loggedIn && (loggedIn.status === "ADMIN" || loggedIn.status === "FACULTY"|| loggedIn.status === "EVENT_COORDINATOR") && !isEventMangerPage&&(
                 <Link to="/event-planner" className="navBarLink">
                     <button>Event Planer</button>
                 </Link>)
