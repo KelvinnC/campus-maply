@@ -10,7 +10,21 @@ router.get('/', async (req, res) => {
     db.all(
       `SELECT e.*,
               b.code AS building_code,
-              b.name AS building_name
+              b.name AS building_name,
+              (SELECT json_object(
+                'booking_id', rb.id,
+                'room_id', r.id,
+                'room_number', r.room_number,
+                'capacity', r.capacity,
+                'building_code', b2.code,
+                'building_name', b2.name
+              )
+              FROM room_bookings rb
+              LEFT JOIN rooms r ON rb.room_id = r.id
+              LEFT JOIN buildings b2 ON r.building_id = b2.id
+              WHERE rb.event_id = e.id
+              ORDER BY rb.id DESC
+              LIMIT 1) AS booking
        FROM events e
        LEFT JOIN buildings b ON e.building_id = b.id
        ORDER BY e.start_time DESC, e.id DESC`,
@@ -20,7 +34,11 @@ router.get('/', async (req, res) => {
           console.error('Error fetching events:', err);
           return res.status(500).json({ error: 'Failed to fetch events' });
         }
-        res.json(rows || []);
+        const events = (rows || []).map(row => ({
+          ...row,
+          booking: row.booking ? JSON.parse(row.booking) : null
+        }));
+        res.json(events);
       }
     );
   } catch (error) {
@@ -56,9 +74,12 @@ router.get('/:id', async (req, res) => {
                   r.room_number,
                   r.capacity,
                   rb.start_time,
-                  rb.end_time
+                  rb.end_time,
+                  b.code AS building_code,
+                  b.name AS building_name
            FROM room_bookings rb
            LEFT JOIN rooms r ON rb.room_id = r.id
+           LEFT JOIN buildings b ON r.building_id = b.id
            WHERE rb.event_id = ?
            ORDER BY rb.id DESC
            LIMIT 1`,
