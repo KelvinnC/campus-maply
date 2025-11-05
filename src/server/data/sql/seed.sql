@@ -168,95 +168,96 @@ INSERT OR IGNORE INTO rooms (building_id, room_number, capacity, furniture, layo
 (12, '336', 38, 'Mixed', NULL, 'Informal Learning', NULL);
 
 -- Washrooms
--- Only accessible/all-gender washrooms are seeded here, no data exists for others
+-- Only accessible washrooms are seeded here. Non-accessible will not be included.
 
--- Legend:
--- W — Wheelchair accessible single-stall washroom
--- WAG — Wheelchair accessible and All Gender single-stall washroom
--- WW — Wheelchair accessible and Women’s single-stall washroom
--- WM — Wheelchair accessible and Men’s single-stall washroom
+-- Accessibility and gender labels used in the data:
+-- accessibility:
+--   'Wheelchair accessible' — single-stall, wheelchair accessible (no gender info)
+-- gender:
+--   'All-gender', 'Women', 'Men', or 'Unspecified'
+
 INSERT INTO washrooms (building_id, room_number, latitude, longitude, description, accessibility, gender) VALUES
 -- Admin (id = 4)
-(4, '005', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(4, '017', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(4, '111', NULL, NULL, NULL, 'WAG', 'All Gender'),
+(4, '005', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(4, '017', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(4, '111', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
 
 -- Arts Building (id = 3)
-(3, '111', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(3, '126', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(3, '128', NULL, NULL, NULL, 'WW', 'Women'),
-(3, '211', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(3, '224', NULL, NULL, NULL, 'WM', 'Men'),
-(3, '226', NULL, NULL, NULL, 'WW', 'Women'),
-(3, '273', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(3, '373', NULL, NULL, NULL, 'WAG', 'All Gender'),
+(3, '111', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(3, '126', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(3, '128', NULL, NULL, NULL, 'Wheelchair accessible', 'Women'),
+(3, '211', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(3, '224', NULL, NULL, NULL, 'Wheelchair accessible', 'Men'),
+(3, '226', NULL, NULL, NULL, 'Wheelchair accessible', 'Women'),
+(3, '273', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(3, '373', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
 
 -- Arts and Sciences Centre (ASC) (id = 5)
-(5, '121', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(5, '222', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(5, '223', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(5, '422', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(5, '423', NULL, NULL, NULL, 'WAG', 'All Gender'),
+(5, '121', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(5, '222', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(5, '223', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(5, '422', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(5, '423', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
 
 -- Creative & Critical Studies (CCS) (id = 6)
-(6, '202', NULL, NULL, NULL, 'WAG', 'All Gender'),
+(6, '202', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
 
 -- Commons (COM) (id = 7)
-(7, '009', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(7, '107', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(7, '108', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(7, '109', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(7, '207', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(7, '320', NULL, NULL, NULL, 'WAG', 'All Gender'),
+(7, '009', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(7, '107', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(7, '108', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(7, '109', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(7, '207', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(7, '320', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
 
 -- EME Building (id = 1)
-(1, '0223', NULL, NULL, NULL, 'WW', 'Women'),
-(1, '0225', NULL, NULL, NULL, 'WM', 'Men'),
-(1, '0253', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(1, '1154', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(1, '1215-2', NULL, NULL, NULL, 'WM', 'Men'),
-(1, '1219', NULL, NULL, NULL, 'WW', 'Women'),
-(1, '2225', NULL, NULL, NULL, 'WW', 'Women'),
-(1, '2227', NULL, NULL, NULL, 'WM', 'Men'),
-(1, '3128', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(1, '3146', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(1, '3236', NULL, NULL, NULL, 'WW', 'Women'),
-(1, '3236 B', NULL, NULL, NULL, 'WM', 'Men'),
-(1, '4216', NULL, NULL, NULL, 'WW', 'Women'),
-(1, '4218', NULL, NULL, NULL, 'WM', 'Men'),
-(1, '4234', NULL, NULL, NULL, 'WW', 'Women'),
-(1, '4236', NULL, NULL, NULL, 'WM', 'Men'),
-(1, '4144', NULL, NULL, NULL, 'WAG', 'All Gender'),
+(1, '0223', NULL, NULL, NULL, 'Wheelchair accessible', 'Women'),
+(1, '0225', NULL, NULL, NULL, 'Wheelchair accessible', 'Men'),
+(1, '0253', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(1, '1154', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(1, '1215-2', NULL, NULL, NULL, 'Wheelchair accessible', 'Men'),
+(1, '1219', NULL, NULL, NULL, 'Wheelchair accessible', 'Women'),
+(1, '2225', NULL, NULL, NULL, 'Wheelchair accessible', 'Women'),
+(1, '2227', NULL, NULL, NULL, 'Wheelchair accessible', 'Men'),
+(1, '3128', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(1, '3146', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(1, '3236', NULL, NULL, NULL, 'Wheelchair accessible', 'Women'),
+(1, '3236 B', NULL, NULL, NULL, 'Wheelchair accessible', 'Men'),
+(1, '4216', NULL, NULL, NULL, 'Wheelchair accessible', 'Women'),
+(1, '4218', NULL, NULL, NULL, 'Wheelchair accessible', 'Men'),
+(1, '4234', NULL, NULL, NULL, 'Wheelchair accessible', 'Women'),
+(1, '4236', NULL, NULL, NULL, 'Wheelchair accessible', 'Men'),
+(1, '4144', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
 
 -- Fipke Centre (FIP) (id = 8)
-(8, '117', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(8, '208', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(8, '234', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(8, '334', NULL, NULL, NULL, 'WAG', 'All Gender'),
+(8, '117', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(8, '208', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(8, '234', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(8, '334', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
 
 -- Gym (GYM) (id = 9)
-(9, '1st Floor', NULL, NULL, NULL, 'WAG', 'All Gender'),
+(9, '1st Floor', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
 
 -- Library (LIB) (id = 10)
-(10, '232', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(10, '233', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(10, '314', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(10, '108', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(10, '209', NULL, NULL, NULL, 'WAG', 'All Gender'),
+(10, '232', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(10, '233', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(10, '314', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(10, '108', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(10, '209', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
 
 -- Science Building (SCI) (id = 2)
-(2, '116', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(2, '225', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(2, '321', NULL, NULL, NULL, 'WAG', 'All Gender'),
+(2, '116', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(2, '225', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(2, '321', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
 
 -- University Centre (UNC) (id = 12)
-(12, '135', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(12, '225', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(12, '312 N', NULL, NULL, NULL, 'WAG', 'All Gender'),
+(12, '135', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(12, '225', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(12, '312 N', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
 
 -- Upper Campus Health (UCH) (id = 13)
-(13, '006', NULL, NULL, NULL, 'WAG', 'All Gender'),
-(13, '007', NULL, NULL, NULL, 'WAG', 'All Gender');
+(13, '006', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender'),
+(13, '007', NULL, NULL, NULL, 'Wheelchair accessible', 'All-gender');
 
 
 -- Events

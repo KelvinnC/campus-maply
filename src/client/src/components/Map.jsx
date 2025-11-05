@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import SearchBox from './SearchBox.jsx';
+import RoomList from './RoomList.jsx';
 
 // marker icons to be changed
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -38,6 +39,11 @@ const Map = ({buildingFilter, parkingFilter}) => {
   const [parkingLots, setParkingLots] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedBuilding, setSelectedBuilding] = useState(null);
+  const [rooms, setRooms] = useState([]);
+  const [washrooms, setWashrooms] = useState([]);
+  const [businesses, setBusinesses] = useState([]);
+  const [loadingData, setLoadingData] = useState(false);
   const mapRef = useRef(null);
   const markerRefs = useRef({});
 
@@ -65,6 +71,58 @@ const Map = ({buildingFilter, parkingFilter}) => {
     fetchBuildings();
   }, []);
 
+  const fetchBuildingData = async (buildingId) => {
+    setLoadingData(true);
+    try {
+      // Fetch rooms, washrooms, and businesses in parallel
+      const [roomsRes, washroomsRes, businessesRes] = await Promise.all([
+        fetch(`/api/rooms?buildingId=${buildingId}`),
+        fetch(`/api/washrooms?buildingId=${buildingId}`),
+        fetch(`/api/businesses?buildingId=${buildingId}`)
+      ]);
+
+      if (roomsRes.ok) {
+        const roomsData = await roomsRes.json();
+        setRooms(roomsData);
+      } else {
+        setRooms([]);
+      }
+
+      if (washroomsRes.ok) {
+        const washroomsData = await washroomsRes.json();
+        setWashrooms(washroomsData);
+      } else {
+        setWashrooms([]);
+      }
+
+      if (businessesRes.ok) {
+        const businessesData = await businessesRes.json();
+        setBusinesses(businessesData);
+      } else {
+        setBusinesses([]);
+      }
+    } catch (err) {
+      console.error('Error fetching building data:', err);
+      setRooms([]);
+      setWashrooms([]);
+      setBusinesses([]);
+    } finally {
+      setLoadingData(false);
+    }
+  };
+
+  const handleBuildingClick = (building) => {
+    setSelectedBuilding(building);
+    fetchBuildingData(building.id);
+  };
+
+  const handleCloseRoomList = () => {
+    setSelectedBuilding(null);
+    setRooms([]);
+    setWashrooms([]);
+    setBusinesses([]);
+  };
+
   useEffect(() => {
     const fetchParkingLots = async () => {
       try {
@@ -81,6 +139,7 @@ const Map = ({buildingFilter, parkingFilter}) => {
     };
     fetchParkingLots();
   }, []);
+
 
   const handleSelect = (item) => {
     // Pan to and open popup if available
@@ -116,6 +175,9 @@ const Map = ({buildingFilter, parkingFilter}) => {
             key={building.id} 
             position={[building.latitude, building.longitude]}
             ref={(ref) => { if (ref) markerRefs.current[building.id] = ref; }}
+            eventHandlers={{
+              click: () => handleBuildingClick(building)
+            }}
           >
             <Popup>
               <div className="popup-content">
@@ -142,6 +204,15 @@ const Map = ({buildingFilter, parkingFilter}) => {
           </Marker>
         )))}
       </MapContainer>
+      {selectedBuilding && rooms.length > 0 &&(
+        <RoomList 
+          building={selectedBuilding} 
+          rooms={rooms}
+          washrooms={washrooms}
+          businesses={businesses}
+          onClose={handleCloseRoomList} 
+        />
+      )}
     </div>
   );
 };
