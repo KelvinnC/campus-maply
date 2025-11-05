@@ -1,20 +1,42 @@
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useNavigate  } from "react-router-dom"
 import "../css/navBar.css"
 
 export default function NavBar(){
+    const loggedIn = JSON.parse(localStorage.getItem("user"))
     const location = useLocation()
     const isLoginPage = location.pathname === '/login'
+    const isEventMangerPage = location.pathname === '/event-planner'
+    const navigate = useNavigate();
+    function signOut(){
+        localStorage.clear()
+        navigate("/");
+    }
     
     return(
         <nav className="NavbarBox">
             <div className="navBarTitle">
-                Campus Maply
-            </div>
-            {!isLoginPage && (
-                <Link to="/login" className="navBarLoginBtn">
-                    Login
+                <Link to="/"className="navBarTitle">
+                    Campus Maply
                 </Link>
+            </div>
+            <div className="navBarFlexBox">
+                {loggedIn && (loggedIn.status === "ADMIN" || loggedIn.status === "FACULTY"|| loggedIn.status === "EVENT_COORDINATOR") && !isEventMangerPage&&(
+                <Link to="/event-planner" className="navBarLink">
+                    <button>Event Planer</button>
+                </Link>)
+                }
+                {!isLoginPage && !loggedIn&& (
+                <Link to="/login" className="navBarLink">
+                    <button>Login</button>
+                </Link>
+            )}{loggedIn&& (
+                 <div className="navBarLink">
+                    <button onClick={signOut}>Sign Out</button>
+                 </div>
+
             )}
+
+            </div>
         </nav>
     )
 }
