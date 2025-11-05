@@ -67,8 +67,9 @@ router.get('/available', async (req, res) => {
     const whereRooms = `WHERE 1=1${conditions.length ? ' AND ' + conditions.join(' AND ') : ''}`;
 
     const sql = `
-      SELECT r.*
+      SELECT r.*, b.code AS building_code, b.name AS building_name
       FROM rooms r
+      LEFT JOIN buildings b ON r.building_id = b.id
       ${whereRooms}
       AND NOT EXISTS (
         SELECT 1

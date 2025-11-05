@@ -1,4 +1,7 @@
 .NavbarBox{
+    display: grid;
+    align-items: center;
+    grid-template-columns: 5fr 1fr;
     left: 0;
     top: 0;
     width: 100%;
@@ -10,4 +13,29 @@
     padding-top: 5px;
     color:#CBDCEB;
     font-size: 4vh;
+    text-decoration: none;
+}
+.navBarFlexBox{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0px;
+}
+
+.navBarLink button {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    margin-right: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+    border: 0.5px solid black;
+    border-radius: 10px;
+    font-size: 1em;
+    background-color: #E8DFCA;
+    color: #6D94C5;
+}
+
+.navBarLink button:hover {
+    background-color: #0C3363;
+    cursor: pointer;
 }

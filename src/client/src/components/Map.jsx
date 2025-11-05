@@ -18,10 +18,25 @@ let DefaultIcon = L.icon({
   shadowSize: [41, 41]
 });
 
+const parkingSvg = `
+  <svg width="30" height="30" xmlns="http://www.w3.org/2000/svg">
+    <rect width="30" height="30" rx="3" fill="#0066cc"/>
+    <text x="15" y="22" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="white" text-anchor="middle">P</text>
+  </svg>
+`;
+const parkingSvgUrl = `data:image/svg+xml;base64,${btoa(parkingSvg)}`;
+
+let ParkingIcon = L.icon({
+  iconUrl: parkingSvgUrl,
+  iconSize: [30, 30],
+  iconAnchor: [15, 15],
+  popupAnchor: [0, -15]
+});
 L.Marker.prototype.options.icon = DefaultIcon;
 
 const Map = ({buildingFilter, parkingFilter}) => {
   const [buildings, setBuildings] = useState([]);
+  const [parkingLots, setParkingLots] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedBuilding, setSelectedBuilding] = useState(null);
@@ -108,6 +123,24 @@ const Map = ({buildingFilter, parkingFilter}) => {
     setBusinesses([]);
   };
 
+  useEffect(() => {
+    const fetchParkingLots = async () => {
+      try {
+        const response = await fetch('/api/parkinglots');
+        if (!response.ok) {
+          throw new Error('Failed to fetch parking lots');
+        }
+        const data = await response.json();
+        setParkingLots(data);
+      } catch (err) {
+        console.error('Error fetching parking lots:', err);
+        setError(err.message);
+      }
+    };
+    fetchParkingLots();
+  }, []);
+
+
   const handleSelect = (item) => {
     // Pan to and open popup if available
     const latlng = [item.latitude, item.longitude];
@@ -150,6 +183,22 @@ const Map = ({buildingFilter, parkingFilter}) => {
               <div className="popup-content">
                 <h3>{building.name}</h3>
                 {building.description && <p>{building.description}</p>}
+              </div>
+            </Popup>
+          </Marker>
+        )))}
+
+        {parkingFilter && (parkingLots.map((parking) => (
+          <Marker 
+            key={`parking-${parking.id}`}
+            position={[parking.latitude, parking.longitude]}
+            icon={ParkingIcon}
+            ref={(ref) => { if (ref) markerRefs.current[`parking-${parking.id}`] = ref; }}
+          >
+            <Popup>
+              <div className="popup-content">
+                <h3>{parking.name}</h3>
+                {parking.description && <p>{parking.description}</p>}
               </div>
             </Popup>
           </Marker>

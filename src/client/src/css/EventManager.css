@@ -28,22 +28,35 @@
     color: #6D94C5;
 }
 .createEventForm input{
-    background-color: #F5EFE6;
+    background-color: #E8DFCA;
     border: none;
     color: #6D94C5;
     height: 5dvh;
+    font-size: 1.1em;
+    padding: 5px 10px;
 }
 .createEventForm input[type="date"]::-webkit-datetime-edit {
-    color: #6D94C5; /* Make text invisible */
+    color: #6D94C5;
 }
 .createEventForm input[type="time"]::-webkit-datetime-edit {
-    color: #6D94C5; /* Make text invisible */
+    color: #6D94C5;
 }
 .createEventForm select{
-    background-color: #F5EFE6;
+    background-color: #E8DFCA;
     border: none;
     color: #6D94C5;
     height: 5dvh;
+    font-size: 1.1em;
+    padding: 5px 10px;
+}
+.createEventForm textarea{
+    background-color: #E8DFCA;
+    border: none;
+    color: #6D94C5;
+    font-size: 1.1em;
+    padding: 10px;
+    font-family: inherit;
+    resize: vertical;
 }
 .createEventForm button {
     margin-top: 40px;
