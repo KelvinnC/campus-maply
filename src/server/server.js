@@ -27,7 +27,6 @@ app.use('/api/businesses', businessesRouter);
 app.use('/api/search', searchRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/events', eventsRouter);
-app.use('/api/rooms', roomsRouter);
 
 async function startServer() {
   try {

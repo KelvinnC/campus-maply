@@ -1,8 +1,7 @@
 import React from 'react';
 import '../css/roomList.css';
 
-
-const RoomList = ({ building, rooms= [], washrooms = [], businesses = [], onClose }) => {
+  const RoomList = ({ building, rooms= [], washrooms = [], businesses = [], onClose }) => {
   console.log(building, rooms, washrooms, businesses)
 
 
