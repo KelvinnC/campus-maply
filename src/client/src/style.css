@@ -37,7 +37,7 @@
 
 .app-main {
   display: grid;
-  grid-template-columns: 20% auto;
+  grid-template-columns: 1fr;
   flex: 1;
   position: relative;
   overflow: hidden;
@@ -57,6 +57,13 @@
   justify-content: center;
   z-index: 1000;
   pointer-events: none;
+}
+
+.overlay-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: auto;
 }
 
 .searchbox {
@@ -163,5 +170,45 @@
 .leaflet-popup-content {
   margin: 12px;
   min-width: 200px;
+}
+
+/* Filters button and popover near search */
+.filters-control {
+  position: relative;
+}
+
+.filter-button {
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid #cfd8dc;
+  border-radius: 8px;
+  background: #fff;
+  color: #263238;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.filter-button:hover {
+  background: #f7f9fb;
+}
+
+.filters-popover {
+  position: absolute;
+  top: 44px;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  padding: 10px 12px;
+  min-width: 180px;
+}
+
+.filters-popover .filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
 }
 

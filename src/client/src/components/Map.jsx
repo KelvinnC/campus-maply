@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import SearchBox from './SearchBox.jsx';
+import Filters from './Filters.jsx';
 import RoomList from './RoomList.jsx';
 
 // marker icons to be changed
@@ -34,7 +35,12 @@ let ParkingIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-const Map = ({buildingFilter, parkingFilter}) => {
+const Map = ({
+  buildingEnabled,
+  parkingEnabled,
+  onBuildingChange,
+  onParkingChange
+}) => {
   const [buildings, setBuildings] = useState([]);
   const [parkingLots, setParkingLots] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -142,7 +148,6 @@ const Map = ({buildingFilter, parkingFilter}) => {
 
 
   const handleSelect = (item) => {
-    // Pan to and open popup if available
     const latlng = [item.latitude, item.longitude];
     if (mapRef.current && latlng[0] && latlng[1]) {
       mapRef.current.setView(latlng, 18, { animate: true });
@@ -156,7 +161,15 @@ const Map = ({buildingFilter, parkingFilter}) => {
   return (
     <div className="map-container">
       <div className="map-overlay">
-        <SearchBox onSelect={handleSelect} />
+        <div className="overlay-bar">
+          <SearchBox onSelect={handleSelect} />
+          <Filters
+            buildingEnabled={buildingEnabled}
+            parkingEnabled={parkingEnabled}
+            onBuildingChange={onBuildingChange}
+            onParkingChange={onParkingChange}
+          />
+        </div>
       </div>
       <MapContainer 
         center={ubcoCenter} 
@@ -170,7 +183,7 @@ const Map = ({buildingFilter, parkingFilter}) => {
           maxZoom={19}
         />
         
-        {buildingFilter && (buildings.map((building) => (
+        {buildingEnabled && (buildings.map((building) => (
           <Marker 
             key={building.id} 
             position={[building.latitude, building.longitude]}
@@ -188,7 +201,7 @@ const Map = ({buildingFilter, parkingFilter}) => {
           </Marker>
         )))}
 
-        {parkingFilter && (parkingLots.map((parking) => (
+        {parkingEnabled && (parkingLots.map((parking) => (
           <Marker 
             key={`parking-${parking.id}`}
             position={[parking.latitude, parking.longitude]}
