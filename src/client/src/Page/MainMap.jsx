@@ -1,5 +1,4 @@
 import { useState } from "react"
-import Filters from "../components/Filters"
 import Map from "../components/Map"
 import NavBar from "../components/NavBar"
 import "../css/mainMap.css"
@@ -18,15 +17,11 @@ export default function MainMap(){
         <div className="app">
             <NavBar/>
             <main className="app-main">
-                <div>
-                    <Filters
-                    buildingFilter = {handelBuildingFilterChange}
-                    parkingFilter = {handelParkingFilterChange}
-                    />
-                 </div>
-                <Map 
-                buildingFilter ={buildingFilter}
-                parkingFilter = {parkingFilter}
+                <Map
+                  buildingEnabled={buildingFilter}
+                  parkingEnabled={parkingFilter}
+                  onBuildingChange={handelBuildingFilterChange}
+                  onParkingChange={handelParkingFilterChange}
                 />
             </main>
         </div>
