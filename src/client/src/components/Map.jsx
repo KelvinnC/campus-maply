@@ -1,10 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import SearchBox from './SearchBox.jsx';
 import Filters from './Filters.jsx';
 import RoomList from './RoomList.jsx';
+
+const UBCO_CENTER = [49.940228741743574, -119.39708442485471];
+const DEFAULT_ZOOM = 18;
 
 // marker icons to be changed
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -35,11 +38,35 @@ let ParkingIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
+const PanTo = ({ target, zoom = 18, onDone }) => {
+  const map = useMap();
+  useEffect(() => {
+    if (!map || !target || !Number.isFinite(target.lat) || !Number.isFinite(target.lng)) return;
+    const z = Math.max(map.getZoom() || 0, zoom);
+    if (map.stop) map.stop();
+    if (map.flyTo) map.flyTo(target, z, { animate: true, duration: 0.75, easeLinearity: 0.25 });
+    else map.setView(target, z, { animate: true });
+    const handler = () => {
+      map.off('moveend', handler);
+      onDone && onDone();
+    };
+    map.on('moveend', handler);
+    const t = setTimeout(() => onDone && onDone(), 1500);
+    return () => {
+      map.off('moveend', handler);
+      clearTimeout(t);
+    };
+  }, [map, target?.lat, target?.lng, zoom]);
+  return null;
+};
+
 const Map = ({
   buildingEnabled,
   parkingEnabled,
+  businessEnabled,
   onBuildingChange,
-  onParkingChange
+  onParkingChange,
+  onBusinessChange
 }) => {
   const [buildings, setBuildings] = useState([]);
   const [parkingLots, setParkingLots] = useState([]);
@@ -49,13 +76,16 @@ const Map = ({
   const [rooms, setRooms] = useState([]);
   const [washrooms, setWashrooms] = useState([]);
   const [businesses, setBusinesses] = useState([]);
+  const [allBusinesses, setAllBusinesses] = useState([]);
+  const [bizCategories, setBizCategories] = useState([]);
+  const [selectedBizCategories, setSelectedBizCategories] = useState(new Set());
   const [loadingData, setLoadingData] = useState(false);
   const mapRef = useRef(null);
   const markerRefs = useRef({});
+  const [panTarget, setPanTarget] = useState(null);
+  const panDoneRef = useRef(null);
 
   // UBCO coordinates
-  const ubcoCenter = [49.940228741743574, -119.39708442485471];
-  const zoomLevel = 18;
 
   // fetch the building locations
   useEffect(() => {
@@ -118,6 +148,14 @@ const Map = ({
   };
 
   const handleBuildingClick = (building) => {
+    try {
+      const target = L.latLng(Number(building.latitude), Number(building.longitude));
+      panDoneRef.current = () => {
+        const m = markerRefs.current[building.id];
+        if (m && m.openPopup) m.openPopup();
+      };
+      setPanTarget(target);
+    } catch {}
     setSelectedBuilding(building);
     fetchBuildingData(building.id);
   };
@@ -146,17 +184,130 @@ const Map = ({
     fetchParkingLots();
   }, []);
 
+  useEffect(() => {
+    const fetchBusinesses = async () => {
+      try {
+        const response = await fetch('/api/businesses');
+        if (!response.ok) {
+          throw new Error('Failed to fetch businesses');
+        }
+        const data = await response.json();
+        setAllBusinesses(data);
+      } catch (err) {
+        console.error('Error fetching businesses:', err);
+      }
+    };
+    fetchBusinesses();
+  }, []);
+
+  // fetch business categories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const resp = await fetch('/api/businesses/categories');
+        if (!resp.ok) throw new Error('Failed to fetch categories');
+        const cats = await resp.json();
+        setBizCategories(cats);
+        setSelectedBizCategories(new Set(cats));
+      } catch (e) {
+        console.error('Error fetching business categories:', e);
+      }
+    };
+    fetchCategories();
+  }, []);
+
 
   const handleSelect = (item) => {
-    const latlng = [item.latitude, item.longitude];
-    if (mapRef.current && latlng[0] && latlng[1]) {
-      mapRef.current.setView(latlng, 18, { animate: true });
+    let markerKey;
+    if (item.type === 'building') markerKey = item.id;
+    else if (item.type === 'room') markerKey = item.building_id;
+    else if (item.type === 'business') markerKey = `business-${item.id}`;
+
+    const marker = markerRefs.current[markerKey];
+
+    let target = null;
+    if (item) {
+      const lat = Number(item.latitude);
+      const lng = Number(item.longitude);
+      if (Number.isFinite(lat) && Number.isFinite(lng)) {
+        if (item.type === 'business') {
+          const idNum = Number(item.id) || 1;
+          const dx = (idNum % 2 ? 1 : -1) * 0.00006;
+          const dy = (Math.floor(idNum / 2) % 2 ? 1 : -1) * 0.00004;
+          target = L.latLng(lat + dy, lng + dx);
+        } else {
+          target = L.latLng(lat, lng);
+        }
+      }
     }
-    const buildingId = item.type === 'building' ? item.id : item.building_id;
-    const marker = markerRefs.current[buildingId];
-    if (marker && marker.openPopup) {
-      marker.openPopup();
+
+    if (target) {
+      // Debug -- ignore
+      try { console.log('[Map] handleSelect', { item, markerKey, target: target && target.toString() }); } catch {}
+
+      panDoneRef.current = () => {
+        try { console.log('[Map] opening popup for', markerKey); } catch {}
+        if (marker && marker.openPopup) marker.openPopup();
+      };
+      setPanTarget(target);
+    } else if (marker && marker.openPopup) {
+      try { console.log('[Map] no target, opening popup only for', markerKey); } catch {}
+    marker.openPopup();
+    } else {
+      try { console.log('[Map] handleSelect: no target computed and no marker found', { item }); } catch {}
     }
+  };
+
+  // business icons
+  //   def icon - circle
+  const bizDefaultSvg = `
+    <svg width="28" height="28" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="14" cy="14" r="13" fill="#2e7d32" />
+    </svg>
+  `;
+  // food icon
+  const bizFoodSvg = `
+    <svg width="28" height="28" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="14" cy="14" r="13" fill="#ef6c00" />
+      <rect x="13" y="6" width="2" height="10" fill="#ffffff" />
+      <rect x="11" y="6" width="6" height="2" fill="#ffffff" />
+      <rect x="11" y="8" width="1.4" height="2.4" fill="#ffffff" />
+      <rect x="13.3" y="8" width="1.4" height="2.4" fill="#ffffff" />
+      <rect x="15.6" y="8" width="1.4" height="2.4" fill="#ffffff" />
+    </svg>
+  `;
+  // store icon
+  const bizStoreSvg = `
+    <svg width="28" height="28" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="14" cy="14" r="13" fill="#D62400" />
+      <!-- building body -->
+      <rect x="7" y="9" width="14" height="11" rx="1.6" fill="#ffffff" />
+      <!-- door -->
+      <rect x="12.4" y="14.4" width="3.2" height="5.6" fill="#D62400" />
+    </svg>
+  `;
+  const bizDefaultUrl = `data:image/svg+xml;base64,${btoa(bizDefaultSvg)}`;
+  const bizFoodUrl = `data:image/svg+xml;base64,${btoa(bizFoodSvg)}`;
+  const bizStoreUrl = `data:image/svg+xml;base64,${btoa(bizStoreSvg)}`;
+
+  const DefaultBizIcon = L.icon({ iconUrl: bizDefaultUrl, iconSize: [28,28], iconAnchor: [14,14], popupAnchor: [0,-14] });
+  const FoodBizIcon = L.icon({ iconUrl: bizFoodUrl, iconSize: [28,28], iconAnchor: [14,14], popupAnchor: [0,-14] });
+  const StoreBizIcon = L.icon({ iconUrl: bizStoreUrl, iconSize: [28,28], iconAnchor: [14,14], popupAnchor: [0,-14] });
+
+  const getBusinessIcon = (biz) => {
+    const cat = (biz.category || '').toLowerCase();
+    if (cat.includes('food') || cat.includes('rest') || cat.includes('dining') || cat.includes('cafe') || cat.includes('coffee')) return FoodBizIcon;
+    if (cat.includes('retail') || cat.includes('store') || cat.includes('shop') || cat.includes('market')) return StoreBizIcon;
+    return DefaultBizIcon;
+  };
+
+  const offsetBusiness = (biz) => {
+    const id = Number(biz.id) || 1;
+    const dx = (id % 2 ? 1 : -1) * 0.00006; // ~6m east/west
+    const dy = (Math.floor(id / 2) % 2 ? 1 : -1) * 0.00004; // ~4m north/south
+    const lat = Number(biz.latitude);
+    const lng = Number(biz.longitude);
+    return [lat + dy, lng + dx];
   };
   return (
     <div className="map-container">
@@ -166,14 +317,25 @@ const Map = ({
           <Filters
             buildingEnabled={buildingEnabled}
             parkingEnabled={parkingEnabled}
+            businessEnabled={businessEnabled}
+            categories={bizCategories}
+            selectedCategories={[...selectedBizCategories]}
             onBuildingChange={onBuildingChange}
             onParkingChange={onParkingChange}
+            onBusinessChange={onBusinessChange}
+            onCategoryToggle={(cat, checked) => {
+              setSelectedBizCategories(prev => {
+                const next = new Set(prev);
+                if (checked) next.add(cat); else next.delete(cat);
+                return next;
+              });
+            }}
           />
         </div>
       </div>
       <MapContainer 
-        center={ubcoCenter} 
-        zoom={zoomLevel} 
+        center={UBCO_CENTER} 
+        zoom={DEFAULT_ZOOM} 
         style={{ height: '100%', width: '100%' }}
         whenCreated={(map) => { mapRef.current = map; }}
       >
@@ -182,17 +344,18 @@ const Map = ({
           url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
           maxZoom={19}
         />
+        <PanTo target={panTarget} zoom={18} onDone={() => { if (panDoneRef.current) panDoneRef.current(); }} />
         
         {buildingEnabled && (buildings.map((building) => (
           <Marker 
             key={building.id} 
-            position={[building.latitude, building.longitude]}
+            position={[Number(building.latitude), Number(building.longitude)]}
             ref={(ref) => { if (ref) markerRefs.current[building.id] = ref; }}
             eventHandlers={{
               click: () => handleBuildingClick(building)
             }}
           >
-            <Popup>
+            <Popup autoPan={false}>
               <div className="popup-content">
                 <h3>{building.name}</h3>
                 {building.description && <p>{building.description}</p>}
@@ -204,14 +367,58 @@ const Map = ({
         {parkingEnabled && (parkingLots.map((parking) => (
           <Marker 
             key={`parking-${parking.id}`}
-            position={[parking.latitude, parking.longitude]}
+            position={[Number(parking.latitude), Number(parking.longitude)]}
             icon={ParkingIcon}
             ref={(ref) => { if (ref) markerRefs.current[`parking-${parking.id}`] = ref; }}
+            eventHandlers={{
+              click: () => {
+                const lat = Number(parking.latitude);
+                const lng = Number(parking.longitude);
+                if (Number.isFinite(lat) && Number.isFinite(lng)) {
+                  panDoneRef.current = () => {
+                    const m = markerRefs.current[`parking-${parking.id}`];
+                    if (m && m.openPopup) m.openPopup();
+                  };
+                  setPanTarget(L.latLng(lat, lng));
+                }
+              }
+            }}
           >
-            <Popup>
+            <Popup autoPan={false}>
               <div className="popup-content">
                 <h3>{parking.name}</h3>
                 {parking.description && <p>{parking.description}</p>}
+              </div>
+            </Popup>
+          </Marker>
+        )))}
+
+        {businessEnabled && (allBusinesses
+          .filter((biz) => selectedBizCategories.size === 0 || selectedBizCategories.has(biz.category))
+          .map((biz) => (
+          <Marker
+            key={`business-${biz.id}`}
+            position={offsetBusiness(biz)}
+            icon={getBusinessIcon(biz)}
+            ref={(ref) => { if (ref) markerRefs.current[`business-${biz.id}`] = ref; }}
+            eventHandlers={{
+              click: () => {
+                const [lat, lng] = offsetBusiness(biz);
+                if (Number.isFinite(lat) && Number.isFinite(lng)) {
+                  panDoneRef.current = () => {
+                    const m = markerRefs.current[`business-${biz.id}`];
+                    if (m && m.openPopup) m.openPopup();
+                  };
+                  setPanTarget(L.latLng(lat, lng));
+                }
+              }
+            }}
+          >
+            <Popup autoPan={false}>
+              <div className="popup-content">
+                <h3>{biz.name}</h3>
+                {biz.category && <p className="secondary">{biz.category}</p>}
+                {biz.description && <p>{biz.description}</p>}
               </div>
             </Popup>
           </Marker>

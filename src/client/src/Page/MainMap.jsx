@@ -5,12 +5,16 @@ import "../css/mainMap.css"
 export default function MainMap(){
     const [buildingFilter, setBuildingFilter] = useState(true)
     const [parkingFilter, setParkingFilter] = useState(true)
+    const [businessFilter, setBusinessFilter] = useState(true)
 
     const handelBuildingFilterChange = (change) =>{
         setBuildingFilter(change);
     }
     const handelParkingFilterChange = (change) =>{
         setParkingFilter(change);
+    }
+    const handelBusinessFilterChange = (change) =>{
+        setBusinessFilter(change);
     }
 
     return(
@@ -20,8 +24,10 @@ export default function MainMap(){
                 <Map
                   buildingEnabled={buildingFilter}
                   parkingEnabled={parkingFilter}
+                  businessEnabled={businessFilter}
                   onBuildingChange={handelBuildingFilterChange}
                   onParkingChange={handelParkingFilterChange}
+                  onBusinessChange={handelBusinessFilterChange}
                 />
             </main>
         </div>
