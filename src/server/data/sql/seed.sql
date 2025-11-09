@@ -307,7 +307,7 @@ INSERT OR IGNORE INTO parking_lots (name, latitude, longitude, description) VALU
 ('Parking Lot I', 49.942273265920534, -119.39052209634546, 'Paid Parking'),
 ('Parking Lot J', 49.93744090746948, -119.39495501264005, 'Paid Parking'),
 ('Parking Lot K', 49.938096347801746, -119.40015269930888, 'Paid Parking'),
-('Parking Lot M', 49.938441750890476, -119.39853339209296, 'Paid Parking'),
+('Parking Lot M (GYM Short Term)', 49.938441750890476, -119.39853339209296, 'Paid Parking'),
 ('Parking Lot R', 49.942946703085624, -119.39905533001382, 'Paid Parking'),
 ('Parking Lot S', 49.938603904670046, -119.39989533936459, 'Paid Parking'),
 ('UNC Short Term', 49.94080489515363, -119.3946793894299, 'Paid Parking'),
