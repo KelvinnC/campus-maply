@@ -51,7 +51,6 @@ router.get('/', async (req, res) => {
       });
     });
 
-    // Rooms: every token must match at least one of room or building fields
     const roomWhere = tokens
       .map(() => '((r.room_number LIKE ?) OR (IFNULL(r.room_type, "") LIKE ?) OR (IFNULL(b.code, "") LIKE ?) OR (IFNULL(b.name, "") LIKE ?))')
       .join(' AND ');
@@ -82,6 +81,39 @@ router.get('/', async (req, res) => {
         building_name: r.building_name,
         latitude: r.latitude,
         longitude: r.longitude,
+      });
+    });
+
+    const businessWhere = tokens
+      .map(() => '(bs.name LIKE ? OR IFNULL(bs.category, "") LIKE ? OR IFNULL(bs.description, "") LIKE ?)')
+      .join(' AND ');
+    const businessParams = tokens.flatMap(t => {
+      const like = `%${t}%`;
+      return [like, like, like];
+    });
+
+    const businessSql = `
+      SELECT bs.id AS id, bs.name AS name, bs.category AS category, bs.description AS description,
+             bs.latitude AS latitude, bs.longitude AS longitude,
+             b.id AS building_id, b.code AS building_code, b.name AS building_name
+      FROM businesses bs
+      LEFT JOIN buildings b ON bs.building_id = b.id
+      ${businessWhere ? 'WHERE ' + businessWhere : ''}
+      ORDER BY bs.name ASC
+      LIMIT 50`;
+    const businessRows = await all(businessSql, businessParams);
+    businessRows.forEach(bz => {
+      results.push({
+        type: 'business',
+        id: bz.id,
+        name: bz.name,
+        category: bz.category,
+        description: bz.description,
+        building_id: bz.building_id,
+        building_code: bz.building_code,
+        building_name: bz.building_name,
+        latitude: bz.latitude,
+        longitude: bz.longitude,
       });
     });
 

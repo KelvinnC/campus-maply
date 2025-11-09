@@ -24,7 +24,9 @@ INSERT OR IGNORE INTO buildings (code, name, description, latitude, longitude) V
 ('RHS', 'Reichwald Health Sciences Centre', NULL, 49.93804214410787, -119.39956631561031), -- ID 11
 ('UNC', 'University Centre', NULL, 49.94123393487755, -119.39625425533593), -- ID 12
 ('UCH', 'Upper Campus Health Building', NULL, 49.94128946542811, -119.40018873218449), -- ID 13
-('NCH', 'Nechako Residence', NULL, 49.94158431179825, -119.39602512080366); -- ID 14
+('NCH', 'Nechako Residence', NULL, 49.94158431179825, -119.39602512080366), -- ID 14
+('IP1', 'Innovation Precinct 1', 'Research space and offices', 49.94766314822474, -119.38975208638773), -- ID 15
+('IPA', 'Innovation Precinct Annex 1', 'Research space and offices', 49.94759713088704, -119.38883329510875); -- ID 16
 
 
 -- Rooms (formal and informal learning spaces)
@@ -287,8 +289,8 @@ INSERT OR IGNORE INTO businesses (building_id, category, name, latitude, longitu
 
 -- University Centre (id = 12)
 (12, 'Restaurant', 'Fusion Express', 49.94102897920256, -119.39588126942678, 'Asian Fusion Cuisine', '11:00 AM - 6:00 PM, Weekdays'),
-(12, 'Restaurant', 'Jays Cafe Express', 49.941087234913624, -119.39611062153317, 'Cod, sandwiches, and light meals', '9:00 AM - 10:00 PM, Everyday except Sundays'),
-(12, 'Restaurant', 'Koi Sushi', 49.94142087375924, -119.39618878709128, 'Sushi and Japanese Cuisine', '11:00 AM - 2:00 PM, Weekdays'),
+(12, 'Restaurant', 'J''s Cafe Express', 49.94118723491363,-119.39611062153317, 'Cod, sandwiches, and light meals', '9:00 AM - 10:00 PM, Everyday except Sundays'),
+(12, 'Restaurant', 'Koi Sushi', 49.94111787375924,-119.3961187830913, 'Sushi and Japanese Cuisine', '11:00 AM - 2:00 PM, Weekdays'),
 
 -- Nechako Residence (id = 14)
 (14, 'Restaurant', 'Pritchard Dining Hall', 49.941504898628004, -119.39568798734781, 'Breakfast,Lunch,Dinner All You Can Eat Buffet','7:00 AM - 10:00 PM, Everyday'),
@@ -309,7 +311,8 @@ INSERT OR IGNORE INTO parking_lots (name, latitude, longitude, description) VALU
 ('Parking Lot R', 49.942946703085624, -119.39905533001382, 'Paid Parking'),
 ('Parking Lot S', 49.938603904670046, -119.39989533936459, 'Paid Parking'),
 ('UNC Short Term', 49.94080489515363, -119.3946793894299, 'Paid Parking'),
-('Parking Lot W', 49.94158951992008, -119.3998785493951, 'Paid Parking');
+('Parking Lot W', 49.94158951992008, -119.3998785493951, 'Paid Parking'),
+('Parking Lot IP1', 49.947665999743336, -119.3893671026305, 'Paid Parking');
 
 -- Bus Stops
 INSERT OR IGNORE INTO bus_stops (name, latitude, longitude, description) VALUES

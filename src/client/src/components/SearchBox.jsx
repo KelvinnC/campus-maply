@@ -38,19 +38,20 @@ const SearchBox = ({ onSelect }) => {
   }, [query]);
 
   const handleSelect = (item) => {
+    try { console.log('[SearchBox] select', item); } catch {}
     setOpen(false);
-    onSelect && onSelect(item);
+    if (onSelect) onSelect(item);
   };
 
   return (
     <div className="searchbox">
       <input
         type="text"
-        placeholder="Search buildings or rooms (e.g., EME or 312)"
+        placeholder="Search buildings, rooms, or businesses"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onFocus={() => results.length && setOpen(true)}
-        aria-label="Search buildings or rooms"
+        aria-label="Search buildings, rooms, or businesses"
       />
       {open && (
         <div className="search-results" role="listbox">
@@ -65,17 +66,25 @@ const SearchBox = ({ onSelect }) => {
               className="search-item"
               onClick={() => handleSelect(r)}
             >
-              {r.type === 'building' ? (
+              {r.type === 'building' && (
                 <>
                   <span className="badge">Building</span>
                   <span className="primary">{r.name}</span>
                   {r.code && <span className="secondary">{r.code}</span>}
                 </>
-              ) : (
+              )}
+              {r.type === 'room' && (
                 <>
                   <span className="badge">Room</span>
                   <span className="primary">{r.building_code} {r.room_number}</span>
                   <span className="secondary">{r.building_name}</span>
+                </>
+              )}
+              {r.type === 'business' && (
+                <>
+                  <span className="badge">Business</span>
+                  <span className="primary">{r.name}</span>
+                  <span className="secondary">{r.category}{r.building_code ? ` • ${r.building_code}` : ''}</span>
                 </>
               )}
             </button>

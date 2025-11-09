@@ -24,7 +24,8 @@ app.use('/api/parkinglots', parkinglotsRouter);
 app.use('/api/rooms', roomsRouter);
 app.use('/api/washrooms', washroomsRouter);
 app.use('/api/businesses', businessesRouter);
-app.use('/api/search', searchRouter);
+app.use('/api/buildings/:buildingId/businesses', businessesRouter);
+app.use('/api/search', searchRouter);7
 app.use('/api/auth', authRouter);
 app.use('/api/events', eventsRouter);
 
