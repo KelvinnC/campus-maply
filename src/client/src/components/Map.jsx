@@ -222,6 +222,7 @@ const Map = ({
     if (item.type === 'building') markerKey = item.id;
     else if (item.type === 'room') markerKey = item.building_id;
     else if (item.type === 'business') markerKey = `business-${item.id}`;
+    else if (item.type === 'parking') markerKey = `parking-${item.id}`;
 
     const marker = markerRefs.current[markerKey];
 

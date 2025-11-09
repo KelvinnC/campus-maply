@@ -117,6 +117,32 @@ router.get('/', async (req, res) => {
       });
     });
 
+    const parkingWhere = tokens
+      .map(() => '(name LIKE ? OR IFNULL(description, "") LIKE ?)')
+      .join(' AND ');
+    const parkingParams = tokens.flatMap(t => {
+      const like = `%${t}%`;
+      return [like, like];
+    });
+
+    const parkingSql = `
+      SELECT id, name, description, latitude, longitude
+      FROM parking_lots
+      ${parkingWhere ? 'WHERE ' + parkingWhere : ''}
+      ORDER BY name ASC
+      LIMIT 50`;
+    const parkingRows = await all(parkingSql, parkingParams);
+    parkingRows.forEach(p => {
+      results.push({
+        type: 'parking',
+        id: p.id,
+        name: p.name,
+        description: p.description,
+        latitude: p.latitude,
+        longitude: p.longitude,
+      });
+    });
+
     res.json(results);
   } catch (error) {
     console.error('Error in search route:', error);

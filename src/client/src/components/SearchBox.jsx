@@ -47,11 +47,11 @@ const SearchBox = ({ onSelect }) => {
     <div className="searchbox">
       <input
         type="text"
-        placeholder="Search buildings, rooms, or businesses"
+        placeholder="Search buildings, rooms, businesses, or parking lots"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onFocus={() => results.length && setOpen(true)}
-        aria-label="Search buildings, rooms, or businesses"
+        aria-label="Search buildings, rooms, businesses, or parking lots"
       />
       {open && (
         <div className="search-results" role="listbox">
@@ -85,6 +85,13 @@ const SearchBox = ({ onSelect }) => {
                   <span className="badge">Business</span>
                   <span className="primary">{r.name}</span>
                   <span className="secondary">{r.category}{r.building_code ? ` • ${r.building_code}` : ''}</span>
+                </>
+              )}
+              {r.type === 'parking' && (
+                <>
+                  <span className="badge">Parking</span>
+                  <span className="primary">{r.name}</span>
+                  {r.description && <span className="secondary">{r.description}</span>}
                 </>
               )}
             </button>
