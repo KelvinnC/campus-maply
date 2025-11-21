@@ -2,7 +2,30 @@ import express from 'express';
 import database from '../data/database.js';
 
 const router = express.Router();
-
+//List all events given a building ID
+router.get('/get/:buildingId', async (req, res) => {
+  try {
+    const { buildingId } = req.params;
+    const db = database.getDB();
+    db.all(
+      `SELECT *
+      FROM room_bookings r LEFT JOIN events e ON r.event_id = e.id 
+      LEFT JOIN rooms ON rooms.id = r.room_id
+      WHERE rooms.building_id = ?`,
+      [buildingId],
+      (err, rows) => {
+        if (err) {
+          console.error('Error fetching events:', err);
+          return res.status(500).json({ error: 'Failed to fetch events' });
+        }
+        res.json(rows);
+      }
+    );
+  } catch (error) {
+    console.error('Error in events route:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 // List all events (basic fields)
 router.get('/', async (req, res) => {
   try {

@@ -12,7 +12,24 @@
   z-index: 1000;
   overflow: hidden;
 }
-
+.room-list-colum{
+  display: flex;
+  flex-direction: column;
+}
+.room-list-colum button{
+  width: 150px;
+  height: 30px;
+  margin-top: 5px;
+  border: 0.5px solid black;
+  border-radius: 10px;
+  font-size: 1em;
+  background-color: #6D94C5;
+  color: #E8DFCA;
+}
+.room-list-colum button:hover {
+    background-color: #0C3363;
+    cursor: pointer;
+}
 .room-list-header {
   display: flex;
   justify-content: space-between;
