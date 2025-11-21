@@ -79,6 +79,7 @@ const Map = ({
   const [allBusinesses, setAllBusinesses] = useState([]);
   const [bizCategories, setBizCategories] = useState([]);
   const [selectedBizCategories, setSelectedBizCategories] = useState(new Set());
+  const [events, setEvents] = useState([])
   const [loadingData, setLoadingData] = useState(false);
   const mapRef = useRef(null);
   const markerRefs = useRef({});
@@ -111,10 +112,11 @@ const Map = ({
     setLoadingData(true);
     try {
       // Fetch rooms, washrooms, and businesses in parallel
-      const [roomsRes, washroomsRes, businessesRes] = await Promise.all([
+      const [roomsRes, washroomsRes, businessesRes, eventsRes] = await Promise.all([
         fetch(`/api/rooms?buildingId=${buildingId}`),
         fetch(`/api/washrooms?buildingId=${buildingId}`),
-        fetch(`/api/businesses?buildingId=${buildingId}`)
+        fetch(`/api/businesses?buildingId=${buildingId}`),
+        fetch(`/api/events/get/${buildingId}`)
       ]);
 
       if (roomsRes.ok) {
@@ -137,11 +139,18 @@ const Map = ({
       } else {
         setBusinesses([]);
       }
+      if (eventsRes.ok) {
+        const eventsData = await eventsRes.json();
+        setEvents(eventsData);
+      } else {
+        setEvents([]);
+      }
     } catch (err) {
       console.error('Error fetching building data:', err);
       setRooms([]);
       setWashrooms([]);
       setBusinesses([]);
+      setEvents([]);
     } finally {
       setLoadingData(false);
     }
@@ -165,6 +174,7 @@ const Map = ({
     setRooms([]);
     setWashrooms([]);
     setBusinesses([]);
+    setEvents([]);
   };
 
   useEffect(() => {
@@ -431,6 +441,7 @@ const Map = ({
           rooms={rooms}
           washrooms={washrooms}
           businesses={businesses}
+          events={events}
           onClose={handleCloseRoomList} 
         />
       )}

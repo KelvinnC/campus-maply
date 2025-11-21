@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../css/roomList.css';
+import EventList from './EventList';
 
-  const RoomList = ({ building, rooms= [], washrooms = [], businesses = [], onClose }) => {
+  const RoomList = ({ building, rooms= [], washrooms = [], businesses = [], events, onClose }) => {
   console.log(building, rooms, washrooms, businesses)
+  const [showRooms, setShowRooms] = useState(true)
+
+  function changeToOrFromRoom (){
+    setShowRooms(!showRooms)
+  }
 
 
   const hasData = rooms.length > 0 || washrooms.length > 0 || businesses.length > 0;
@@ -10,10 +16,17 @@ import '../css/roomList.css';
   return (
     <div className="room-list-panel">
       <div className="room-list-header">
-        <h2>{building.name}</h2>
+        <div className='room-list-colum'>
+          <h2>{building.name}</h2>
+          <button onClick={changeToOrFromRoom}>
+          {showRooms&&(<>View Events</>)}
+          {!showRooms&&(<>View Rooms</>)}
+          </button>
+        </div>
         <button className="close-button" onClick={onClose}>×</button>
       </div>
-      <div className="room-list-content">
+      {!showRooms&&(<EventList building={building} events={events} onClose={onClose}/>)}
+      {showRooms&&(<div className="room-list-content">
         {!hasData ? (
           <p className="no-data">No data available for this building.</p>
         ) : (
@@ -72,7 +85,7 @@ import '../css/roomList.css';
             )}
           </>
         )}
-      </div>
+      </div>)}
     </div>
   );
 };
