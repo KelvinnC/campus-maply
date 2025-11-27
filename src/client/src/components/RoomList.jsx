@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../css/roomList.css';
 import EventList from './EventList';
 
   const RoomList = ({ building, rooms= [], washrooms = [], businesses = [], events, onClose }) => {
   console.log(building, rooms, washrooms, businesses)
+  const navigate = useNavigate();
   const [showRooms, setShowRooms] = useState(true)
 
   function changeToOrFromRoom (){
     setShowRooms(!showRooms)
   }
 
+  const handleRoomClick = (roomId) => {
+    navigate(`/room/${roomId}`);
+  }
 
   const hasData = rooms.length > 0 || washrooms.length > 0 || businesses.length > 0;
 
@@ -37,7 +42,11 @@ import EventList from './EventList';
                 <h3 className="section-header">Rooms</h3>
                 <ul className="items-list">
                   {rooms.map((room) => (
-                    <li key={`room-${room.id}`} className="item">
+                    <li 
+                      key={`room-${room.id}`} 
+                      className="item room-item-clickable"
+                      onClick={() => handleRoomClick(room.id)}
+                    >
                       <span className="item-name">{room.room_number}</span>
                       {room.room_type && <span className="item-tag">{room.room_type}</span>}
                     </li>
