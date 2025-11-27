@@ -152,3 +152,12 @@
   color: #9ca3af;
   display: inline-block;
 }
+
+.room-item-clickable {
+  cursor: pointer;
+}
+
+.room-item-clickable:hover {
+  background-color: #e5e7eb;
+  transform: translateX(3px);
+}
