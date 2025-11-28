@@ -60,6 +60,56 @@ const PanTo = ({ target, zoom = 18, onDone }) => {
   return null;
 };
 
+const stripHtml = (html) => {
+  if (!html) return '';
+  return html.replace(/<[^>]*>/g, '').trim();
+};
+
+const suoEventMatchesBuilding = (event, building) => {
+  if (!event || !event.venue || !event.venue.name || !building) return false;
+  const venueName = String(event.venue.name).toLowerCase();
+  const buildingCode = (building.code || '').toLowerCase();
+  const buildingName = (building.name || '').toLowerCase();
+
+  if (buildingCode && venueName.includes(buildingCode)) return true;
+  if (buildingName && venueName.includes(buildingName)) return true;
+
+  return false;
+};
+
+const mapSuoEventToBuildingEvent = (event, building) => {
+  let startTime = event.start_date || null;
+  let endTime = event.end_date || event.start_date || null;
+
+  try {
+    if (startTime) {
+      const d = new Date(startTime);
+      if (!Number.isNaN(d.getTime())) startTime = d.toISOString();
+    }
+    if (endTime) {
+      const d = new Date(endTime);
+      if (!Number.isNaN(d.getTime())) endTime = d.toISOString();
+    }
+  } catch {
+  }
+
+  let roomLabel = 'TBA';
+  if (event.venue && event.venue.name) {
+    roomLabel = event.venue.name;
+  } else if (building && building.name) {
+    roomLabel = building.name;
+  }
+
+  return {
+    id: `suo-${event.id}`,
+    title: event.title,
+    description: stripHtml(event.description || ''),
+    room_number: roomLabel,
+    start_time: startTime,
+    end_time: endTime
+  };
+};
+
 const Map = ({
   buildingEnabled,
   parkingEnabled,
@@ -111,12 +161,13 @@ const Map = ({
   const fetchBuildingData = async (buildingId) => {
     setLoadingData(true);
     try {
-      // Fetch rooms, washrooms, and businesses in parallel
-      const [roomsRes, washroomsRes, businessesRes, eventsRes] = await Promise.all([
+      // Fetch rooms, washrooms, businesses, internal events, and SUO events in parallel
+      const [roomsRes, washroomsRes, businessesRes, eventsRes, suoEventsRes] = await Promise.all([
         fetch(`/api/rooms?buildingId=${buildingId}`),
         fetch(`/api/washrooms?buildingId=${buildingId}`),
         fetch(`/api/businesses?buildingId=${buildingId}`),
-        fetch(`/api/events/get/${buildingId}`)
+        fetch(`/api/events/get/${buildingId}`),
+        fetch('/api/suo-events')
       ]);
 
       if (roomsRes.ok) {
@@ -139,12 +190,28 @@ const Map = ({
       } else {
         setBusinesses([]);
       }
+      let combinedEvents = [];
+
       if (eventsRes.ok) {
         const eventsData = await eventsRes.json();
-        setEvents(eventsData);
-      } else {
-        setEvents([]);
+        combinedEvents = Array.isArray(eventsData) ? eventsData : [];
       }
+
+      if (suoEventsRes.ok) {
+        try {
+          const suoEventsData = await suoEventsRes.json();
+          const building = buildings.find(b => String(b.id) === String(buildingId));
+          if (Array.isArray(suoEventsData) && building) {
+            const filteredSuo = suoEventsData.filter(evt => suoEventMatchesBuilding(evt, building));
+            const mappedSuo = filteredSuo.map(evt => mapSuoEventToBuildingEvent(evt, building));
+            combinedEvents = combinedEvents.concat(mappedSuo);
+          }
+        } catch (suoErr) {
+          console.error('Error processing SUO events for building:', suoErr);
+        }
+      }
+
+      setEvents(combinedEvents);
     } catch (err) {
       console.error('Error fetching building data:', err);
       setRooms([]);

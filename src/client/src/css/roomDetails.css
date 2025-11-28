@@ -18,8 +18,8 @@
 .back-button {
   margin-left: 2%;
   margin-top: 1%;
-  width: 150px;
-  height: 50px;
+  width: var(--btn-width);
+  height: var(--btn-height);
   border: 0.5px solid black;
   border-radius: 30px;
   font-size: 1em;
@@ -99,8 +99,8 @@
 
 .availability-form button {
   margin-top: 30px;
-  width: 200px;
-  height: 60px;
+  width: var(--btn-width);
+  height: var(--btn-height);
   border: 0.5px solid black;
   border-radius: 30px;
   font-size: 1em;

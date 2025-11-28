@@ -6,6 +6,7 @@ export default function NavBar(){
     const location = useLocation()
     const isLoginPage = location.pathname === '/login'
     const isEventMangerPage = location.pathname === '/event-planner'
+    const isSuoEventsPage = location.pathname === '/events'
     const navigate = useNavigate();
     function signOut(){
         localStorage.clear()
@@ -20,6 +21,11 @@ export default function NavBar(){
                 </Link>
             </div>
             <div className="navBarFlexBox">
+                {!isSuoEventsPage && (
+                    <Link to="/events" className="navBarLink">
+                        <button>SUO Events</button>
+                    </Link>
+                )}
                 {loggedIn && (loggedIn.status === "ADMIN" || loggedIn.status === "FACULTY"|| loggedIn.status === "EVENT_COORDINATOR") && !isEventMangerPage&&(
                 <Link to="/event-planner" className="navBarLink">
                     <button>Event Planer</button>
