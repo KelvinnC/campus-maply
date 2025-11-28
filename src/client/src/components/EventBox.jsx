@@ -1,10 +1,13 @@
 import actionButton from "../assets/actionButton.png"
-export default function EventBox({event}){
-    const title = event.title
-    const date = event.date
-    const time = event.time
+import EditEvent from "./EditEvent"
+export default function EventBox({event,formatedEvent, close, refreshTrigger, setEvent}){
+    const title = formatedEvent.title
+    const date = formatedEvent.date
+    const time = formatedEvent.time
     const location = event.location
-    console.log(event)
+    const handleSetEvent =()=>{
+        setEvent(event)
+    }
     return(
         <div className="eventBoxGrid">
             <div className="eventBox">
@@ -13,8 +16,9 @@ export default function EventBox({event}){
                 <div>{location}</div>
             </div>
             <div>
-                <img src={actionButton} alt="actionButton"/>
+                <img src={actionButton} alt="actionButton" onClick={handleSetEvent}/>
             </div>
+            
         </div>
     )
 }

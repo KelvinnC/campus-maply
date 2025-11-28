@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import EventBox from "./EventBox";
 
-export default function YourPlanedEvent({ refreshTrigger }) {
+export default function YourPlanedEvent({ refreshTrigger, setSelectedEvent, close }) {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
 
     const fetchEvents = async () => {
         try {
@@ -71,7 +72,11 @@ export default function YourPlanedEvent({ refreshTrigger }) {
                     {events.map((event) => (
                         <EventBox
                             key={event.id}
-                            event={formatEventForDisplay(event)}
+                            formatedEvent={formatEventForDisplay(event)}
+                            event = {event}
+                            close = {close}
+                            refreshTrigger = {refreshTrigger}
+                            setEvent = {setSelectedEvent}
                         />
                     ))}
                 </div>
