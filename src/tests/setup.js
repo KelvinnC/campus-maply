@@ -75,8 +75,12 @@ if (isClientTest) {
 let testDb = null;
 
 if (isServerTest) {
-  const module = await import('./server-tests/helpers/testDb.js');
-  testDb = module.default;
+  try {
+    const module = await import('../server/server-tests/helpers/testDb.js');
+    testDb = module.default;
+  } catch (e) {
+    // testDb not available - that's okay for client tests
+  }
 }
 
 beforeAll(async () => {

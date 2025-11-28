@@ -34,7 +34,7 @@ class TestDatabase {
   async createTables() {
     return new Promise((resolve, reject) => {
       try {
-        const schemaPath = path.join(__dirname, '../../../server/data/sql/schema.sql');
+        const schemaPath = path.join(__dirname, '../../data/sql/schema.sql');
         const schemaSql = fs.readFileSync(schemaPath, 'utf8');
         this.db.exec(schemaSql, (err) => {
           if (err) {

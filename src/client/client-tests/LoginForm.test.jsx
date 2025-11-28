@@ -5,7 +5,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
-import LoginForm from '../../client/src/components/loginForm.jsx';
+import LoginForm from '../src/components/loginForm.jsx';
 
 // Mock useNavigate
 const mockNavigate = vi.fn();

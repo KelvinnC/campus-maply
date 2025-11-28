@@ -3,7 +3,7 @@
  */
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import EventList from '../../client/src/components/EventList.jsx';
+import EventList from '../src/components/EventList.jsx';
 
 describe('EventList Component', () => {
   const mockBuilding = { id: 1, name: 'Engineering Building' };

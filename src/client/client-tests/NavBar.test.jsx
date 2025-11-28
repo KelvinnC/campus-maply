@@ -4,7 +4,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import NavBar from '../../client/src/components/NavBar.jsx';
+import NavBar from '../src/components/NavBar.jsx';
 
 // Mock useNavigate
 vi.mock('react-router-dom', async (importOriginal) => {

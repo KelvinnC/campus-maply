@@ -4,7 +4,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import SearchBox from '../../client/src/components/SearchBox.jsx';
+import SearchBox from '../src/components/SearchBox.jsx';
 
 describe('SearchBox Component', () => {
   const mockOnSelect = vi.fn();

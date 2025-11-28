@@ -12,10 +12,13 @@ export default defineConfig({
     globals: true,
     testTimeout: 10000,
     hookTimeout: 10000,
-    include: ['tests/**/*.test.{js,jsx}'],
+    include: [
+      'server/server-tests/**/*.test.js',
+      'client/client-tests/**/*.test.jsx',
+    ],
     environment: 'node',
     environmentMatchGlobs: [
-      ['tests/client-tests/**', 'jsdom'],
+      ['client/client-tests/**', 'jsdom'],
     ],
     setupFiles: ['./tests/setup.js'],
     coverage: {

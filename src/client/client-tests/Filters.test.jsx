@@ -3,7 +3,7 @@
  */
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import Filters from '../../client/src/components/Filters.jsx';
+import Filters from '../src/components/Filters.jsx';
 
 describe('Filters Component', () => {
   const defaultProps = {

@@ -3,7 +3,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import EventBox from '../../client/src/components/EventBox.jsx';
+import EventBox from '../src/components/EventBox.jsx';
 
 describe('EventBox Component', () => {
   const mockEvent = {

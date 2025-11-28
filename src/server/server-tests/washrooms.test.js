@@ -4,7 +4,7 @@ import request from 'supertest';
 import testDb from './helpers/testDb.js';
 
 // Mock the database module before importing the router
-vi.mock('../../server/data/database.js', () => {
+vi.mock('../data/database.js', () => {
   return {
     default: {
       getDB: () => testDb.getDB(),
@@ -15,7 +15,7 @@ vi.mock('../../server/data/database.js', () => {
 });
 
 // Import the router after mocking
-const { default: washroomsRouter } = await import('../../server/routes/washrooms.js');
+const { default: washroomsRouter } = await import('../routes/washrooms.js');
 
 // Create test app
 const app = express();

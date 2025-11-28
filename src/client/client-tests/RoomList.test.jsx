@@ -4,7 +4,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import RoomList from '../../client/src/components/RoomList.jsx';
+import RoomList from '../src/components/RoomList.jsx';
 
 // Mock useNavigate
 const mockNavigate = vi.fn();

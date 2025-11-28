@@ -3,22 +3,22 @@
  */
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import App from '../../client/src/App.jsx';
+import App from '../src/App.jsx';
 
 // Mock the page components to simplify testing
-vi.mock('../../client/src/Page/MainMap.jsx', () => ({
+vi.mock('../src/Page/MainMap.jsx', () => ({
   default: () => <div data-testid="main-map">MainMap Page</div>
 }));
 
-vi.mock('../../client/src/Page/Login.jsx', () => ({
+vi.mock('../src/Page/Login.jsx', () => ({
   default: () => <div data-testid="login-page">Login Page</div>
 }));
 
-vi.mock('../../client/src/Page/EventManagerPage.jsx', () => ({
+vi.mock('../src/Page/EventManagerPage.jsx', () => ({
   default: () => <div data-testid="event-manager-page">Event Manager Page</div>
 }));
 
-vi.mock('../../client/src/Page/RoomDetails.jsx', () => ({
+vi.mock('../src/Page/RoomDetails.jsx', () => ({
   default: () => <div data-testid="room-details-page">Room Details Page</div>
 }));
 

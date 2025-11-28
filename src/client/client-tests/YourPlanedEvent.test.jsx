@@ -3,7 +3,7 @@
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
-import YourPlanedEvent from '../../client/src/components/YourPlanedEvent.jsx';
+import YourPlanedEvent from '../src/components/YourPlanedEvent.jsx';
 
 describe('YourPlanedEvent Component', () => {
   beforeEach(() => {
