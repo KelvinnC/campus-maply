@@ -1,14 +1,30 @@
 {
   "name": "ubco-campus-map",
   "version": "1.0.0",
+  "type": "module",
   "description": "UBCO Interactive Campus Map",
   "scripts": {
-    "postinstall": "cd server && npm install && cd ../client && npm install && cd ../server && rm -f data/campus_map.db",
+    "postinstall": "cd server && npm install && cd ../client && npm install && cd ../server && rm -f data/campus_map.db && cd .. && npm run fix-react",
+    "fix-react": "rm -rf node_modules/react node_modules/react-dom && ln -s ../client/node_modules/react node_modules/react && ln -s ../client/node_modules/react-dom node_modules/react-dom",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "cd server && npm run dev",
-    "client": "cd client && npm run dev"
+    "client": "cd client && npm run dev",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^14.3.1",
+    "@testing-library/user-event": "^14.6.1",
+    "@vitejs/plugin-react": "^5.1.1",
+    "concurrently": "^8.2.2",
+    "express": "^5.1.0",
+    "jsdom": "^27.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "sqlite3": "^5.1.7",
+    "supertest": "^7.1.4",
+    "vitest": "^4.0.14"
   }
 }
