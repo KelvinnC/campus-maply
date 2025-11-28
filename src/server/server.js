@@ -10,6 +10,7 @@ import businessesRouter from './routes/businesses.js';
 import searchRouter from './routes/search.js';
 import authRouter from './routes/auth.js';
 import eventsRouter from './routes/events.js';
+import suoEventsRouter from './routes/suoEvents.js';
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use('/api/buildings/:buildingId/businesses', businessesRouter);
 app.use('/api/search', searchRouter);7
 app.use('/api/auth', authRouter);
 app.use('/api/events', eventsRouter);
+app.use('/api/suo-events', suoEventsRouter);
 
 async function startServer() {
   try {
