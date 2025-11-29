@@ -2,18 +2,39 @@ import { useForm } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import '../css/EditEvent.css'
 
-export default function EditEvent({ onEventEdited, event, close }) {
+export default function EditEvent({ onEventEdited, event, close, refreshTrigger }) {
     const { register, handleSubmit,setValue, reset, watch } = useForm();
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState('');
     const [isSuccess, setIsSuccess] = useState(false);
     const [availableRooms, setAvailableRooms] = useState([]);
     const [loadingRooms, setLoadingRooms] = useState(false);
+    const [dateTimeChanged, setDateTimeChanged] = useState(false);
 
     const watchDate = watch('date');
     const watchStartTime = watch('startTime');
     const watchEndTime = watch('endTime');
 
+    const deleteEvent= async()=>{
+        try {
+            const response = await fetch(
+                    `/api/events/${event.id}`, {method:"DELETE"}
+                );
+                if(response.ok){
+                    refreshTrigger();
+                    close();
+                }else {
+                setMessage(result.error || 'Failed to delete event');
+            }
+        } catch (error) {
+            console.error('Error deleting event:', error);
+            setMessage('Connection error. Please try again.');
+        }
+    }
+
+    const changedTimeDate = ()=>{
+        setDateTimeChanged(true)
+    }
     useEffect(() => {
         const fetchAvailableRooms = async () => {
             if (!watchDate || !watchStartTime || !watchEndTime) {
@@ -122,6 +143,7 @@ export default function EditEvent({ onEventEdited, event, close }) {
             <button className="close-button" onClick={close}>×</button>
         <form onSubmit={handleSubmit(onSubmit)} className="popupEditEvent">
             <h1>Edit Event</h1>
+                
             
             <label>Title *</label>     
             <input 
@@ -144,13 +166,16 @@ export default function EditEvent({ onEventEdited, event, close }) {
                 defaultValue={
                   event?.start_time
                     ? new Date(event.start_time).toISOString().split("T")[0]:""}
-                {...register("date", { required: true })}
+                {...register("date", { required: true, onChange: (e) => {
+      changedTimeDate(e);
+    } })}
                 required
             />
 
             <label>Start Time *</label>
             <input 
                 type="time" 
+                onChange={changedTimeDate}
                 defaultValue={
                     event?.start_time
                     ?new Date(event.start_time).toLocaleTimeString("en-GB", {
@@ -160,7 +185,9 @@ export default function EditEvent({ onEventEdited, event, close }) {
                     })
                     :""
                 }
-                {...register("startTime", { required: true })}
+                {...register("startTime", { required: true, onChange: (e) => {
+      changedTimeDate(e);
+    } })}
                 required
             />
 
@@ -176,13 +203,15 @@ export default function EditEvent({ onEventEdited, event, close }) {
                     :""
                 }
                 type="time" 
-                {...register("endTime", { required: true })}
+                {...register("endTime", { required: true, onChange: (e) => {
+      changedTimeDate(e);
+    } })}
                 required
             />
 
             <label>Room Location (Optional)</label>
             <select {...register("roomId")} disabled={loadingRooms}>
-                {event.booking !== undefined && event.booking !== null&&<option>{event.booking.building_code || 'UNK'} : {event.booking.room_number} - Capacity: {event.booking.capacity}</option>}
+                {!dateTimeChanged&&event.booking !== undefined && event.booking !== null&&<option>{event.booking.building_code || 'UNK'} : {event.booking.room_number} - Capacity: {event.booking.capacity}</option>}
                 <option value="">
                     {!watchDate || !watchStartTime || !watchEndTime 
                         ? 'Select date and times first' 
@@ -224,11 +253,12 @@ export default function EditEvent({ onEventEdited, event, close }) {
                     {message}
                 </div>
             )}
-                    
-            <button type="submit" disabled={isLoading}>
-                {isLoading ? 'Editing...' : 'Edit Event'}
-            </button>
-                
+            <div style={{"display": "flex", "justifyContent":"space-around"}}>
+                <button type="submit" disabled={isLoading}>
+                    {isLoading ? 'Editing...' : 'Edit Event'}
+                </button>
+                <button  type="button" className = "fakeButton"onClick={deleteEvent}>Delete</button>
+            </div>
         </form>
         </div>
     );

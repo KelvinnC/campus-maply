@@ -15,6 +15,9 @@ export default function EventManagerPage() {
     const handleEventCreated = (newEvent) => {
         setRefreshTrigger(prev => prev + 1);
     };
+    const handleEventDeleted = () =>{
+        setRefreshTrigger(prev => prev - 1);
+    }
 
     return (
         <div className="eventManager">
@@ -29,6 +32,7 @@ export default function EventManagerPage() {
                 {selectedEvent!==  undefined&&<EditEvent
                     event={selectedEvent}
                     close = {handleCloseEvent}
+                    refreshTrigger = {handleEventDeleted}
                     />
                 }
                 </div>

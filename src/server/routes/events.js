@@ -70,6 +70,28 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.delete('/:id', async (req, res) => {
+  try {
+    const {id} = req.params;
+    const db = database.getDB();
+    await db.run(
+      `
+        DELETE FROM events 
+        WHERE id =?
+      `,[id]
+    )
+    await db.run(
+      `
+        DELETE FROM room_bookings 
+        WHERE event_id =?
+      `,[id]
+    )
+    res.status(200).json({ message: "Deleted" });
+  } catch (error) {
+    console.error('Error in event route:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+})
 
 // Get one event with optional booked room details
 router.get('/:id', async (req, res) => {
