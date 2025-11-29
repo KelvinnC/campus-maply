@@ -70,6 +70,29 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.delete('/:id', async (req, res) => {
+  try {
+    const {id} = req.params;
+    const db = database.getDB();
+    await db.run(
+      `
+        DELETE FROM events 
+        WHERE id =?
+      `,[id]
+    )
+    await db.run(
+      `
+        DELETE FROM room_bookings 
+        WHERE event_id =?
+      `,[id]
+    )
+    res.status(200).json({ message: "Deleted" });
+  } catch (error) {
+    console.error('Error in event route:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+})
+
 // Get one event with optional booked room details
 router.get('/:id', async (req, res) => {
   try {
@@ -122,6 +145,80 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+//Edit an Event
+router.post('/edit', async (req, res) => {
+  try {
+        const db = database.getDB();
+    const {
+      id,
+      title,
+      description = null,
+      building_id = null,
+      start_time = null,
+      end_time = null,
+      room_id = null,
+    } = req.body || {};
+
+    db.run(
+      `
+      UPDATE events
+      SET title=?, description=?, start_time=?, end_time=?, building_id=?
+      WHERE id = ?
+      `,[title, description, start_time, end_time,building_id, id], (err,) =>{
+        if (err) {
+          console.error('Error fetching event:', err);
+          return res.status(500).json({ error: 'Failed to fetch event' });
+        }},(err, updateData) =>{
+
+       
+          db.get(
+            `
+              SELECT room_id, start_time, end_time
+              FROM room_bookings
+              WHERE event_id = ?
+            `,[id], (err, data) =>{
+              if (err) {
+                console.error('Error fetching event:', err);
+                return res.status(500).json({ error: 'Failed to fetch event' });
+              }
+              console.log(data)
+              if(room_id !== null || !data && (data.room_id !== room_id || data.start_time !== start_time || data.end_time !== end_time)){
+                db.run(
+                  `
+                  DELETE FROM room_bookings WHERE event_id = ?
+                  `,[id], (err) =>{
+                    if (err) {
+                      console.error('Error fetching event:', err);
+                      return res.status(500).json({ error: 'Failed to fetch event' });
+                    }
+                  }
+                )
+                db.run(
+                  `
+                    INSERT INTO room_bookings (room_id, event_id, start_time, end_time)
+                    VALUES(?,?,?,?)
+                  `,[room_id,id,start_time,end_time], (err) =>{
+                    if (err) {
+                      console.error('Error fetching event:', err);
+                      return res.status(500).json({ error: 'Failed to fetch event' });
+                    }
+                  }
+                )
+              }
+              console.log("DONE")
+              return res.status(201).json({ id: id, title: title, description: description, building_id:building_id, start_time: start_time, end_time: end_time});
+            }
+          )
+     }
+    )
+    
+  } catch (error) {
+    console.error('Error in events route:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 
 // Create an event, optionally reserve a room if provided
 router.post('/', async (req, res) => {

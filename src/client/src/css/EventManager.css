@@ -18,16 +18,16 @@
     flex-direction:column;
     width: 80%;
 }
-.createEventForm h1{
+.createEventForm h1, .popupEditEvent h1{
     font-size: 2;
     color: #6D94C5;
 }
-.createEventForm label{
+.createEventForm label, .popupEditEvent label{
     margin-top: 15px;
     font-size: 1.2vw;
     color: #6D94C5;
 }
-.createEventForm input{
+.createEventForm input, .popupEditEvent input{
     background-color: #E8DFCA;
     border: none;
     color: #6D94C5;
@@ -35,13 +35,13 @@
     font-size: 1.1em;
     padding: 5px 10px;
 }
-.createEventForm input[type="date"]::-webkit-datetime-edit {
+.createEventForm input[type="date"]::-webkit-datetime-edit, .popupEditEvent input[type="date"]::-webkit-datetime-edit {
     color: #6D94C5;
 }
-.createEventForm input[type="time"]::-webkit-datetime-edit {
+.createEventForm input[type="time"]::-webkit-datetime-edit, .popupEditEvent input[type="time"]::-webkit-datetime-edit{
     color: #6D94C5;
 }
-.createEventForm select{
+.createEventForm select, .popupEditEvent select{
     background-color: #E8DFCA;
     border: none;
     color: #6D94C5;
@@ -49,7 +49,7 @@
     font-size: 1.1em;
     padding: 5px 10px;
 }
-.createEventForm textarea{
+.createEventForm textarea, .popupEditEvent textarea{
     background-color: #E8DFCA;
     border: none;
     color: #6D94C5;
@@ -58,7 +58,7 @@
     font-family: inherit;
     resize: vertical;
 }
-.createEventForm button {
+.createEventForm button{
     margin-top: 40px;
     width: var(--btn-width);
     height: var(--btn-height);
@@ -69,7 +69,7 @@
     color: #F5EFE6;
 }
 
-.createEventForm button:hover {
+.createEventForm button:hover, .popupEditEvent button:hover, .fakeButton:hover{
     background-color: #0C3363;
     cursor: pointer;
 }
