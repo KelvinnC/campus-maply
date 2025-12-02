@@ -33,6 +33,7 @@ export default function EventManagerPage() {
                     event={selectedEvent}
                     close = {handleCloseEvent}
                     refreshTrigger = {handleEventDeleted}
+                    handleEventCreated = {handleEventCreated}
                     />
                 }
                 </div>

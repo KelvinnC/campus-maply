@@ -4,7 +4,6 @@ INSERT OR IGNORE INTO users (email, password, status, name) VALUES
 ('event_coordinator@ubco.ca', '$2a$10$3lfROg136PvVCU3/4ruvBezWavd8C5G1znwNDNr.FP.xQME3.4kqW', 'EVENT_COORDINATOR', 'Event Coordinator'), -- password: event_coordinator
 ('faculty@ubco.ca', '$2a$10$sjDGCAnUqe3ebtQ9XsNBXeQeICem530uTdhuSx4fU7eHiqpXPG/pq', 'FACULTY', 'Faculty'), -- password: faculty
 ('visitor@ubco.ca', '$2a$10$Wt7x17/GiNsLAlR/0mY6fO2uRt1drCok0O4rXhks/.KuD738Ky1fi', 'VISITOR', 'Visitor'); -- password: visitor
- 
 
  -- Buildings
 
@@ -266,6 +265,8 @@ INSERT INTO washrooms (building_id, room_number, latitude, longitude, descriptio
 INSERT OR IGNORE INTO events (title, description, building_id, latitude, longitude, start_time, end_time, created_by) VALUES
 ('Engineering Orientation Day', 'Guided tour of EME Building', 1, 49.939116912933684, -119.39479874074324, '2025-09-22 10:00:00', '2025-09-22 11:00:00', 1);
 
+
+
 -- Businesses
 INSERT OR IGNORE INTO businesses (building_id, category, name, latitude, longitude, description, hours) VALUES
 -- In Engineering Building (id = 1)
@@ -325,3 +326,10 @@ INSERT OR IGNORE INTO bus_stops (name, latitude, longitude, description) VALUES
 ('Bus Stop Just Outside campus', 49.937977915432256, -119.40121441156072, 'Bus Stop for Bus #6');
 
 
+--User Building Access
+INSERT OR IGNORE INTO user_building_access (user_id, building_id) VALUES
+(3, 1); -- faculty@ubco.ca, Engineering Building
+
+--Room bookings (room availability / reservations)
+INSERT OR IGNORE INTO room_bookings (room_id, event_id, start_time, end_time) VALUES
+(48, 1, '2025-09-22 10:00:00', '2025-09-22 11:00:00')

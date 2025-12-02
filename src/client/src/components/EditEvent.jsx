@@ -1,8 +1,10 @@
 import { useForm } from 'react-hook-form';
 import { useState, useEffect } from 'react';
-import '../css/EditEvent.css'
+import '../css/editEvent.css'
 
-export default function EditEvent({ onEventEdited, event, close, refreshTrigger }) {
+export default function EditEvent({ onEventEdited, event, close, refreshTrigger}) {
+    const loggedIn = JSON.parse(localStorage.getItem("user"));
+    const isFaculty = loggedIn.status === "FACULTY";
     const { register, handleSubmit,setValue, reset, watch } = useForm();
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState('');
@@ -51,9 +53,8 @@ export default function EditEvent({ onEventEdited, event, close, refreshTrigger 
                     setAvailableRooms([]);
                     return;
                 }
-
                 const response = await fetch(
-                    `/api/rooms/available?start=${startDateTime.toISOString()}&end=${endDateTime.toISOString()}`
+                    `/api/rooms/available?start=${startDateTime.toISOString()}&end=${endDateTime.toISOString()}&isFaculty=${isFaculty}&userId=${loggedIn.id}`
                 );
 
                 if (response.ok) {
@@ -100,7 +101,6 @@ export default function EditEvent({ onEventEdited, event, close, refreshTrigger 
                 end_time: endDateTime.toISOString(),
                 room_id: data.roomId ? parseInt(data.roomId) : null,
             };
-            console.log(payload)
 
             const response = await fetch('/api/events/edit', {
                 method: 'POST',
@@ -115,7 +115,9 @@ export default function EditEvent({ onEventEdited, event, close, refreshTrigger 
             if (response.ok) {
                 setIsSuccess(true);
                 setMessage('Event Edit made successfully!');
-                reset();
+                close();
+                window.location.reload(false);
+                
                 
                 if (onEventEdited) {
                     onEventEdited(result);
@@ -210,7 +212,7 @@ export default function EditEvent({ onEventEdited, event, close, refreshTrigger 
             />
 
             <label>Room Location (Optional)</label>
-            <select {...register("roomId")} disabled={loadingRooms}>
+            <select {...register("roomId", { required: true })} disabled={loadingRooms}>
                 {!dateTimeChanged&&event.booking !== undefined && event.booking !== null&&<option>{event.booking.building_code || 'UNK'} : {event.booking.room_number} - Capacity: {event.booking.capacity}</option>}
                 <option value="">
                     {!watchDate || !watchStartTime || !watchEndTime 
