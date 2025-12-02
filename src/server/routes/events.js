@@ -70,6 +70,54 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/faculty', async (req, res) => {
+  try {
+    const db = database.getDB();
+    const id = req.query.id;
+    db.all(
+      `SELECT e.*,
+              b.code AS building_code,
+              b.name AS building_name,
+              (SELECT json_object(
+                'booking_id', rb.id,
+                'room_id', r.id,
+                'room_number', r.room_number,
+                'capacity', r.capacity,
+                'building_code', b2.code,
+                'building_name', b2.name
+              )
+              FROM room_bookings rb
+              LEFT JOIN rooms r ON rb.room_id = r.id
+              LEFT JOIN buildings b2 ON r.building_id = b2.id
+              WHERE rb.event_id = e.id
+              ORDER BY rb.id DESC
+              LIMIT 1) AS booking
+       FROM events e
+       JOIN room_bookings r ON e.id = r.event_id
+       JOIN rooms ON rooms.id = r.room_id
+       JOIN buildings b ON rooms.building_id = b.id
+       JOIN user_building_access ua ON ua.building_id = b.id
+       WHERE ua.user_id = ?
+       ORDER BY e.start_time DESC, e.id DESC`,
+      [id],
+      (err, rows) => {
+        if (err) {
+          console.error('Error fetching events:', err);
+          return res.status(500).json({ error: 'Failed to fetch events' });
+        }
+        const events = (rows || []).map(row => ({
+          ...row,
+          booking: row.booking ? JSON.parse(row.booking) : null
+        }));
+        res.json(events);
+      }
+    );
+  } catch (error) {
+    console.error('Error in events route:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 
 // delete an event
 router.delete('/:id', async (req, res) => {
@@ -184,7 +232,6 @@ router.post('/edit', async (req, res) => {
                 console.error('Error fetching event:', err);
                 return res.status(500).json({ error: 'Failed to fetch event' });
               }
-              console.log(data)
                 db.run(
                   `
                   DELETE FROM room_bookings WHERE event_id = ?
@@ -206,7 +253,6 @@ router.post('/edit', async (req, res) => {
                     }
                   }
                 )
-              console.log("DONE")
               return res.status(201).json({ id: id, title: title, description: description, building_id:building_id, start_time: start_time, end_time: end_time});
             }
           )

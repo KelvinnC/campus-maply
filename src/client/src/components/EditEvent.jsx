@@ -101,7 +101,6 @@ export default function EditEvent({ onEventEdited, event, close, refreshTrigger}
                 end_time: endDateTime.toISOString(),
                 room_id: data.roomId ? parseInt(data.roomId) : null,
             };
-            console.log(payload)
 
             const response = await fetch('/api/events/edit', {
                 method: 'POST',

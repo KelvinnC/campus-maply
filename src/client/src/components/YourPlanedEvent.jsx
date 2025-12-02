@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import EventBox from "./EventBox";
 
 export default function YourPlanedEvent({ refreshTrigger, setSelectedEvent, close }) {
+    const loggedIn = JSON.parse(localStorage.getItem("user"));
+    const isFaculty = loggedIn.status === "FACULTY";
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -12,14 +14,26 @@ export default function YourPlanedEvent({ refreshTrigger, setSelectedEvent, clos
             setLoading(true);
             setError(null);
             
-            const response = await fetch('/api/events');
-            if (!response.ok) {
-                throw new Error('Failed to fetch events');
-            }
-            
-            const data = await response.json();
+            if(isFaculty){
+                const response = await fetch(`/api/events/faculty?id=${loggedIn.id}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch events');
+                }
+                
+                const data = await response.json();
 
-            setEvents(data);
+                setEvents(data);
+            }else{
+                const response = await fetch('/api/events');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch events');
+                }
+                
+                const data = await response.json();
+
+                setEvents(data);
+            }
+
         } catch (err) {
             console.error('Error fetching events:', err);
             setError(err.message);

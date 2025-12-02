@@ -46,7 +46,6 @@ router.get('/available', async (req, res) => {
     const isFaculty = req.query.isFaculty;
     const userId = parseInt(req.query.userId);
 
-
     if (!startParam || !endParam) {
       return res.status(400).json({ error: 'start and end are required query params (ISO 8601)' });
     }
@@ -92,7 +91,7 @@ router.get('/available', async (req, res) => {
         WHERE rb.room_id = r.id
           AND NOT (rb.end_time <= ? OR rb.start_time >= ?)
       )`;
-    if(isFaculty === true){
+    if(isFaculty == "true"){
         db.all(sqlForFaculty, [userId, ...params, start.toISOString(), end.toISOString()], (err, rows) => {
         if (err) {
           console.error('Error searching available rooms:', err);
