@@ -5,6 +5,9 @@ INSERT OR IGNORE INTO users (email, password, status, name) VALUES
 ('faculty@ubco.ca', '$2a$10$sjDGCAnUqe3ebtQ9XsNBXeQeICem530uTdhuSx4fU7eHiqpXPG/pq', 'FACULTY', 'Faculty'), -- password: faculty
 ('visitor@ubco.ca', '$2a$10$Wt7x17/GiNsLAlR/0mY6fO2uRt1drCok0O4rXhks/.KuD738Ky1fi', 'VISITOR', 'Visitor'); -- password: visitor
  
+--User Building Access
+INSERT OR IGNORE INTO user_building_access (user_id, building_id) VALUES
+(3, 1); -- faculty@ubco.ca, Engineering Building
 
  -- Buildings
 

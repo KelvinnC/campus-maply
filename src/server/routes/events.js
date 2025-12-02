@@ -70,6 +70,8 @@ router.get('/', async (req, res) => {
   }
 });
 
+
+// delete an event
 router.delete('/:id', async (req, res) => {
   try {
     const {id} = req.params;

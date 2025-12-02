@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 
 export default function CreateEventForm({ onEventCreated }) {
     const { register, handleSubmit, reset, watch } = useForm();
+    const loggedIn = JSON.parse(localStorage.getItem("user"));
+    const isFaculty = loggedIn.status === "FACULTY";
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState('');
     const [isSuccess, setIsSuccess] = useState(false);
@@ -31,7 +33,7 @@ export default function CreateEventForm({ onEventCreated }) {
                 }
 
                 const response = await fetch(
-                    `/api/rooms/available?start=${startDateTime.toISOString()}&end=${endDateTime.toISOString()}`
+                    `/api/rooms/available?start=${startDateTime.toISOString()}&end=${endDateTime.toISOString()}&isFaculty=${isFaculty}&userId=${loggedIn.id}`
                 );
 
                 if (response.ok) {
