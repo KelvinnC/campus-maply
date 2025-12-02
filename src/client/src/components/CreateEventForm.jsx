@@ -157,7 +157,7 @@ export default function CreateEventForm({ onEventCreated }) {
             />
 
             <label>Room Location (Optional)</label>
-            <select {...register("roomId")} disabled={loadingRooms}>
+            <select {...register("roomId", { required: true })} disabled={loadingRooms}>
                 <option value="">
                     {!watchDate || !watchStartTime || !watchEndTime 
                         ? 'Select date and times first' 

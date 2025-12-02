@@ -8,16 +8,6 @@ CREATE TABLE IF NOT EXISTS users (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     CHECK(status IN ('VISITOR', 'EVENT_COORDINATOR', 'ADMIN', 'FACULTY'))
 );
--- Can user access buidling
-CREATE TABLE IF NOT EXISTS user_building_access (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    building_id INTEGER NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (building_id) REFERENCES buildings(id),
-    UNIQUE(user_id, building_id)
-);
-
 -- Buildings
 CREATE TABLE IF NOT EXISTS buildings (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -26,6 +16,15 @@ CREATE TABLE IF NOT EXISTS buildings (
     description TEXT,
     latitude REAL NOT NULL,
     longitude REAL NOT NULL
+);
+-- Can user access buidling
+CREATE TABLE IF NOT EXISTS user_building_access (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    building_id INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (building_id) REFERENCES buildings(id),
+    UNIQUE(user_id, building_id)
 );
 
 -- Events

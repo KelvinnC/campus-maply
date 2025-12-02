@@ -46,7 +46,6 @@ router.get('/available', async (req, res) => {
     const isFaculty = req.query.isFaculty;
     const userId = parseInt(req.query.userId);
 
-    console.log(isFaculty)
 
     if (!startParam || !endParam) {
       return res.status(400).json({ error: 'start and end are required query params (ISO 8601)' });
@@ -67,8 +66,6 @@ router.get('/available', async (req, res) => {
       conditions.push('r.capacity >= ?');
       params.push(minCapacity);
     }
-
-    db.all("SELECT * FROM user_building_access", (err, rows) => console.log("Users:", rows));
     const whereRooms = `WHERE 1=1${conditions.length ? ' AND ' + conditions.join(' AND ') : ''}`;
 
     const sqlForFaculty = `
@@ -95,13 +92,12 @@ router.get('/available', async (req, res) => {
         WHERE rb.room_id = r.id
           AND NOT (rb.end_time <= ? OR rb.start_time >= ?)
       )`;
-    if(isFaculty){
+    if(isFaculty === true){
         db.all(sqlForFaculty, [userId, ...params, start.toISOString(), end.toISOString()], (err, rows) => {
         if (err) {
           console.error('Error searching available rooms:', err);
           return res.status(500).json({ error: 'Failed to search available rooms' });
         }
-        console.log(rows)
         res.json(rows || []);
       });
     }
@@ -124,7 +120,6 @@ router.get('/available', async (req, res) => {
 // GET /api/rooms/:roomId/availability?start=ISO&end=ISO
 router.get('/:roomId/availability', async (req, res) => {
   try {
-    console.log("THIS ONE")
     const db = database.getDB();
     const { roomId } = req.params;
     const { start: startParam, end: endParam } = req.query;

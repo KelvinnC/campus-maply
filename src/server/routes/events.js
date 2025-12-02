@@ -185,7 +185,6 @@ router.post('/edit', async (req, res) => {
                 return res.status(500).json({ error: 'Failed to fetch event' });
               }
               console.log(data)
-              if(room_id !== null || !data && (data.room_id !== room_id || data.start_time !== start_time || data.end_time !== end_time)){
                 db.run(
                   `
                   DELETE FROM room_bookings WHERE event_id = ?
@@ -207,7 +206,6 @@ router.post('/edit', async (req, res) => {
                     }
                   }
                 )
-              }
               console.log("DONE")
               return res.status(201).json({ id: id, title: title, description: description, building_id:building_id, start_time: start_time, end_time: end_time});
             }
