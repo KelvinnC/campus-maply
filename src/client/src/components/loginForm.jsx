@@ -2,6 +2,10 @@ import { useForm } from 'react-hook-form'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+// Allow API base to be configured for production rewrites while keeping localhost default in dev.
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+    || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:4000' : '');
+
 export default function LoginForm(){
     const { register, handleSubmit, reset } = useForm();
     const [message, setMessage] = useState('');
@@ -21,7 +25,7 @@ export default function LoginForm(){
             : { email: data.username, password: data.password };
 
         try {
-            const response = await fetch(`http://localhost:4000${endpoint}`, {
+            const response = await fetch(`${API_BASE_URL}${endpoint}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
